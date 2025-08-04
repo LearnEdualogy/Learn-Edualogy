@@ -1,0 +1,2 @@
+# Home
+Learn Edualogy - Home
