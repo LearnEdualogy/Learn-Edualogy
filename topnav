@@ -1,0 +1,86 @@
+<!-- ✅ Top Navigation -->
+<div class="topnav">
+  <h1 style="text-align: center; margin: 0; font-size: 1.8em; color: #f39c12;">Learn Edualogy</h1>
+  <span class="menu-icon" onclick="toggleMenu()">☰ MENU</span>
+  <div class="links" id="menuLinks">
+    <a href="https://learnedualogy.blogspot.com/p/home.html" target="_blank">Home</a>
+    <a href="https://learnedualogy.blogspot.com/p/about.html" target="_blank">About</a>
+    <a href="https://learnedualogy.blogspot.com/2025/07/daily-quiz.html" target="_blank">Daily Quiz</a>
+    <a href="https://learnedualogy.blogspot.com/p/general-studies-paper-1-2.html" target="_blank">GS Papers</a>
+    <a href="https://learnedualogy.blogspot.com/p/kannada-mcqs-quiz.html" target="_blank">Kannada Quiz</a>
+    <a href="https://learnedualogy.blogspot.com/p/support-us.html" target="_blank">Support Us</a>
+  </div>
+</div>
+
+<script>
+  function toggleMenu() {
+    var menu = document.getElementById("menuLinks");
+    if (menu.style.display === "block") {
+      menu.style.display = "none";
+    } else {
+      menu.style.display = "block";
+    }
+  }
+</script>
+
+<style>
+  /* ✅ Top Navigation */
+  .topnav {
+    background-color: #1a252f;
+    overflow: hidden;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+  }
+
+  .topnav a {
+    color: #f39c12;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 12px 20px;
+    display: block;
+    text-align: center;
+  }
+
+  .topnav a:hover {
+    background-color: #e67e22;
+    color: #fff;
+  }
+
+  .topnav .links {
+    display: none;
+    flex-direction: column;
+    background: #1a252f;
+  }
+
+  .topnav .menu-icon {
+    display: block;
+    color: #f39c12;
+    font-size: 22px;
+    padding: 12px 20px;
+    cursor: pointer;
+    text-align: right;
+  }
+
+  /* ✅ Desktop */
+  @media screen and (min-width: 768px) {
+    .topnav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .topnav .menu-icon {
+      display: none;
+    }
+    .topnav .links {
+      display: flex !important;
+      flex-direction: row;
+      justify-content: center;
+    }
+    .topnav a {
+      display: inline-block;
+      padding: 14px 18px;
+    }
+  }
+</style>
