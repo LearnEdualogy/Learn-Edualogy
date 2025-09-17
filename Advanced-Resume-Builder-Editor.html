@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advanced Resume Builder / Editor</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* --- Global & Theme Variables --- */
+:root {
+  --primary-color: #0066cc;
+  --background-light: #f9f9f9;
+  --background-dark: #ffffff;
+  --font-classic: 'Georgia', serif;
+  --font-modern: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-minimalist: 'Arial', sans-serif;
+  --font-professional: 'Lato', sans-serif;
+  --font-creative: 'Playfair Display', serif;
+  --border-color: #ddd;
+  --panel-bg: #fff;
+  --panel-header-bg: #fafafa;
+}
+
+/* --- Base Styles --- */
+body {
+  background: var(--background-light);
+  color: #222;
+  margin: 0;
+  font-family: var(--font-modern);
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+header {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.8rem 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Main Layout --- */
+main {
+  flex-grow: 1;
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+#editor-pane {
+  flex: 1 1 450px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+#preview-pane {
+  flex: 1 1 650px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  position: relative;
+  font-family: var(--font-modern);
+}
+
+#preview-a4 {
+  background: white;
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+  padding: 20mm 15mm 25mm 15mm;
+  border: 1px solid #aaa;
+  margin: 0 auto;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* "RESUME" Title on Preview */
+#preview-a4::before {
+  content: "RESUME";
+  position: absolute;
+  top: 10mm;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  color: #888;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+/* --- Controls Section --- */
+.controls {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--panel-header-bg);
+}
+
+.controls label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.controls input[type="text"], .controls select, .controls textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1.5px solid #ccc;
+  border-radius: 4px;
+}
+
+.controls textarea {resize: vertical; min-height: 60px;}
+
+.controls button {
+  background: var(--primary-color);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  color: white;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.6rem;
+  transition: background-color 0.2s;
+}
+
+.controls button:hover {
+  background: #005bb5;
+}
+
+.controls button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+#primary-color-picker {
+  width: 100%;
+  height: 36px;
+  border: 1px solid #ccc;
+  padding: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.share-links {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.9rem;
+  color: #555;
+  flex-wrap: wrap;
+}
+
+.share-links a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.share-links a:hover {
+  text-decoration: underline;
+}
+
+/* --- Sections List (Editor) --- */
+#sections-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.section-block {
+  border: 1px solid var(--border-color);
+  margin-bottom: 0.8rem;
+  border-radius: 5px;
+  background: var(--panel-bg);
+  box-shadow: inset 0 0 3px #ccc;
+  user-select: none;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  background: var(--primary-color);
+  color: white;
+  padding: 0.6rem 0.8rem;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  font-weight: bold;
+  cursor: grab;
+  user-select: none;
+}
+
+.section-header .handle {
+  font-size: 1.2rem;
+  margin-right: 0.6rem;
+  cursor: grab;
+}
+
+.section-header input.section-title {
+  background: transparent;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  width: 100%;
+  user-select: text;
+  cursor: text;
+  padding: 0 0.3rem;
+}
+
+.section-header select.section-type {
+  background: white;
+  color: #333;
+  border-radius: 3px;
+  border: none;
+  padding: 0 0.5rem;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.section-buttons button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  user-select: none;
+  padding: 0 0.3rem;
+}
+
+.section-buttons button:hover {
+  opacity: 0.7;
+}
+
+.section-content {
+  padding: 0.8rem 1rem;
+}
+
+.items-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item-block {
+  border-bottom: 1px solid #eee;
+  padding: 0.6rem 0;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  user-select: none;
+}
+
+.item-block:last-child {
+  border-bottom: none;
+}
+
+.item-handle {
+  cursor: grab;
+  font-size: 1.2rem;
+  user-select: none;
+  color: var(--primary-color);
+}
+
+.item-inputs {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-inputs input, .item-inputs textarea {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.item-buttons button {
+  background: transparent;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 1.2rem;
+  user-select: none;
+  padding: 0 0.3rem;
+}
+
+.item-buttons button:hover {
+  opacity: 0.7;
+}
+
+.add-item-btn {
+  margin-top: 0.8rem;
+  background: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.add-item-btn:hover {
+  background: #005bb5;
+}
+
+#add-section-container {
+  padding: 0.8rem 1rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--panel-header-bg);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#add-section-container select, #add-section-container button {
+  font-size: 1rem;
+}
+
+/* --- Inline Editor Toolbar --- */
+#inline-editor-toolbar {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: opacity 0.2s, transform 0.2s;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+#inline-editor-toolbar button, #inline-editor-toolbar select {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  background: #f1f1f1;
+  color: #333;
+}
+
+#inline-editor-toolbar button:hover, #inline-editor-toolbar select:hover {
+  background: #e9e9e9;
+}
+
+#inline-editor-toolbar .active-style {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* --- Resume Preview Styles (for contenteditable) --- */
+#preview-a4[contenteditable="true"] {
+  outline: 2px dashed var(--primary-color);
+  padding-bottom: 40px;
+}
+
+#preview-a4 h1, #preview-a4 h2, #preview-a4 h3, #preview-a4 p {
+  margin: 0;
+  padding: 0;
+}
+
+#preview-a4 h1 {font-size: 2.0rem; margin-bottom: 0.1em;}
+#preview-a4 h2 {font-weight: normal; font-size: 1.2rem; margin-top: 0; margin-bottom: 0.7em; color: var(--primary-color);}
+#preview-a4 .section-title {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
+}
+
+#preview-a4 .section-item {
+  margin-bottom: 0.8rem;
+}
+
+#preview-a4 .section-item .item-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+#preview-a4 .section-item .item-subtitle {
+  font-style: italic;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+#preview-a4 .section-item .item-desc {
+  margin-top: 0.25rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* --- Template Variants --- */
+body.template-modern #preview-pane { font-family: var(--font-modern); }
+
+body.template-classic #preview-pane {
+  font-family: var(--font-classic);
+}
+
+body.template-classic #preview-a4 .section-title {
+  border-bottom-color: #444;
+  color: #333;
+}
+
+body.template-classic #preview-a4 .section-item .item-title {
+  color: #222;
+}
+
+body.template-minimalist #preview-pane {
+  font-family: var(--font-minimalist);
+}
+
+body.template-minimalist #preview-a4 .section-title {
+  border-bottom: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+  color: #333;
+}
+
+body.template-minimalist #preview-a4 h2 {
+  color: #555;
+}
+
+body.template-professional #preview-pane {
+  font-family: var(--font-professional);
+  background: #fdfdfd;
+}
+
+body.template-professional #preview-a4 .section-title {
+  border-bottom: 2px solid #555;
+  color: #222;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+body.template-professional #preview-a4 h1,
+body.template-professional #preview-a4 h2 {
+  color: #222;
+  font-weight: 700;
+}
+
+body.template-creative #preview-pane {
+  font-family: var(--font-creative);
+}
+
+body.template-creative #preview-a4 .section-title {
+  border-bottom: 3px double var(--primary-color);
+  text-align: center;
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  font-weight: normal;
+  color: #333;
+}
+
+body.template-creative #preview-a4 h1 {
+  text-align: center;
+  font-size: 2.8rem;
+  color: var(--primary-color);
+}
+
+body.template-creative #preview-a4 h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #555;
+}
+
+body.template-creative #preview-a4 .item-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+/* --- Print Styles --- */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #preview-pane, #preview-pane * {
+    visibility: visible;
+  }
+  #preview-pane {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm;
+    height: 297mm;
+    box-shadow: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  #preview-a4 {
+    border: none;
+    box-shadow: none;
+    padding: 10mm 15mm 10mm 15mm;
+    width: 100%;
+    min-height: auto;
+  }
+}
+</style>
+</head>
+<body class="template-modern">
+
+<header>
+  Advanced Resume Builder / Editor
+</header>
+
+<main>
+  <section id="editor-pane" aria-label="Resume Editor Panel" role="region">
+    <div class="controls">
+      <label for="input-name">Full Name</label>
+      <input id="input-name" type="text" placeholder="John Doe" autocomplete="name"/>
+
+      <label for="input-title">Job Title / Professional Headline</label>
+      <input id="input-title" type="text" placeholder="Software Engineer" autocomplete="organization-title"/>
+
+      <label for="input-contact">Contact Info (Email / Phone / LinkedIn etc.)</label>
+      <textarea id="input-contact" rows="2" placeholder="john.doe@example.com | +1-555-1234 | linkedin.com/in/johndoe"></textarea>
+
+      <label for="input-summary">Professional Summary</label>
+      <textarea id="input-summary" rows="4" placeholder="Brief introduction about yourself, skills and career goals..."></textarea>
+    </div>
+
+    <div id="sections-list" aria-label="Sections List" role="list"></div>
+
+    <div id="add-section-container" aria-label="Add Section">
+      <select id="add-section-select" aria-label="Select section type to add">
+        <option value="Experience">Experience</option>
+        <option value="Education">Education</option>
+        <option value="Projects">Projects</option>
+        <option value="Skills">Skills</option>
+        <option value="Certifications">Certifications</option>
+        <option value="Awards">Awards</option>
+        <option value="Languages">Languages</option>
+        <option value="Publications">Publications</option>
+        <option value="Volunteer">Volunteer</option>
+        <option value="Interests">Interests</option>
+        <option value="Custom">Custom</option>
+      </select>
+      <button id="add-section-btn" title="Add Section">Add Section</button>
+    </div>
+
+    <div class="controls" style="border-top:1px solid var(--border-color);">
+      <label for="template-select">Select Template</label>
+      <select id="template-select" aria-label="Select resume template">
+        <option value="modern">Modern</option>
+        <option value="classic">Classic</option>
+        <option value="minimalist">Minimalist</option>
+        <option value="professional">Professional</option>
+        <option value="creative">Creative</option>
+      </select>
+
+      <label for="primary-color-picker">Primary Color</label>
+      <input type="color" id="primary-color-picker" value="#0066cc" aria-label="Choose primary color" />
+    </div>
+
+    <div class="controls">
+      <button id="toggle-edit-mode-btn" title="Toggle Inline Edit Mode">Toggle Inline Edit Preview</button>
+      <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+        <button id="download-pdf-btn" title="Download resume as PDF"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+        <button id="download-doc-btn" title="Download resume as Word (doc) file"><i class="fa-solid fa-file-word"></i> Download DOC</button>
+      </div>
+
+      <div class="share-links" aria-label="Social Share Links">
+        Share:
+        <a href="#" id="share-whatsapp" title="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+        <a href="#" id="share-gmail" title="Share via Gmail"><i class="fa-solid fa-envelope"></i> Gmail</a>
+        <a href="#" id="share-twitter" title="Share on Twitter" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+        <a href="#" id="share-linkedin" title="Share on LinkedIn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+        <a href="#" id="share-facebook" title="Share on Facebook" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="preview-pane" aria-label="Live Resume Preview" role="region" tabindex="0">
+    <article id="preview-a4" contenteditable="false" spellcheck="false" aria-live="polite" aria-atomic="true"></article>
+    <div id="inline-editor-toolbar">
+        <select id="font-family-select" title="Font Family">
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Lato">Lato</option>
+            <option value="Playfair Display">Playfair Display</option>
+        </select>
+        <select id="font-size-select" title="Font Size">
+            <option value="12px">12px</option>
+            <option value="14px">14px</option>
+            <option value="16px">16px</option>
+            <option value="18px">18px</option>
+        </select>
+        <button id="bold-btn" title="Bold"><i class="fa-solid fa-bold"></i></button>
+        <button id="italic-btn" title="Italic"><i class="fa-solid fa-italic"></i></button>
+        <button id="underline-btn" title="Underline"><i class="fa-solid fa-underline"></i></button>
+        <button id="align-left-btn" title="Align Left"><i class="fa-solid fa-align-left"></i></button>
+        <button id="align-center-btn" title="Align Center"><i class="fa-solid fa-align-center"></i></button>
+        <button id="align-right-btn" title="Align Right"><i class="fa-solid fa-align-right"></i></button>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+(() => {
+  // --- State Object ---
+  const state = {
+    personal: {
+      name: 'John Doe',
+      title: 'Software Engineer',
+      contact: 'john.doe@example.com | +1-555-1234\nlinkedin.com/in/johndoe',
+      summary: 'A highly motivated software engineer with 5 years of experience in full-stack web development. Proficient in JavaScript, React, and Node.js with a passion for building scalable and efficient applications.'
+    },
+    sections: [
+      {
+        id: 'sec1',
+        type: 'Experience',
+        title: 'Experience',
+        items: [
+          {
+            id: 'e1',
+            fields: {
+              position: 'Senior Developer',
+              company: 'Tech Solutions Inc.',
+              startDate: 'Jan 2022',
+              endDate: 'Present',
+              description: '• Developed and maintained a high-traffic e-commerce platform using React and Node.js.\n• Led a team of 3 developers, mentoring junior staff and ensuring code quality.\n• Implemented a new caching strategy that improved site performance by 30%.'
+            }
+          },
+          {
+            id: 'e2',
+            fields: {
+              position: 'Junior Developer',
+              company: 'Web Innovations',
+              startDate: 'Jun 2019',
+              endDate: 'Dec 2021',
+              description: '• Collaborated on client projects to build responsive and user-friendly websites.\n• Wrote clean, well-documented code following best practices.\n• Participated in daily stand-ups and code reviews.'
+            }
+          }
+        ]
+      },
+      {
+        id: 'sec2',
+        type: 'Education',
+        title: 'Education',
+        items: [
+          {
+            id: 'ed1',
+            fields: {
+              degree: 'Bachelor of Science in Computer Science',
+              institution: 'State University',
+              startDate: '2015',
+              endDate: '2019',
+              description: 'Graduated with honors.'
+            }
+          }
+        ]
+      },
+      {
+        id: 'sec3',
+        type: 'Skills',
+        title: 'Skills',
+        items: [
+          {
+            id: 's1',
+            fields: {
+              skill: 'Programming Languages',
+              level: 'JavaScript, Python, C++'
+            }
+          },
+          {
+            id: 's2',
+            fields: {
+              skill: 'Frameworks & Libraries',
+              level: 'React, Node.js, Express, Django'
+            }
+          },
+          {
+            id: 's3',
+            fields: {
+              skill: 'Tools & Platforms',
+              level: 'Git, Docker, AWS, Firebase'
+            }
+          }
+        ]
+      }
+    ],
+    editingPreview: false,
+    template: 'modern',
+    primaryColor: '#0066cc',
+    currentTextNode: null,
+  };
+
+  // --- Static Data ---
+  const sectionTypes = {
+    Experience: { fields: ['position', 'company', 'startDate', 'endDate', 'description'] },
+    Education: { fields: ['degree', 'institution', 'startDate', 'endDate', 'description'] },
+    Projects: { fields: ['name', 'role', 'description', 'link'] },
+    Skills: { fields: ['skill', 'level'] },
+    Certifications: { fields: ['name', 'authority', 'date'] },
+    Awards: { fields: ['title', 'issuer', 'date', 'description'] },
+    Languages: { fields: ['language', 'level'] },
+    Publications: { fields: ['title', 'publisher', 'date', 'description'] },
+    Volunteer: { fields: ['role', 'organization', 'startDate', 'endDate', 'description'] },
+    Interests: { fields: ['interest'] },
+    Custom: { fields: ['title', 'description'] }
+  };
+  const fontSizes = ['10px', '12px', '14px', '16px', '18px', '20px', '24px'];
+  const fontFamilies = ['Arial', 'Georgia', 'Verdana', 'Times New Roman', 'Courier New', 'Helvetica', 'Lato', 'Playfair Display'];
+
+  // --- DOM References ---
+  const inputName = document.getElementById('input-name');
+  const inputTitle = document.getElementById('input-title');
+  const inputContact = document.getElementById('input-contact');
+  const inputSummary = document.getElementById('input-summary');
+  const sectionsList = document.getElementById('sections-list');
+  const addSectionBtn = document.getElementById('add-section-btn');
+  const addSectionSelect = document.getElementById('add-section-select');
+  const templateSelect = document.getElementById('template-select');
+  const primaryColorPicker = document.getElementById('primary-color-picker');
+  const previewA4 = document.getElementById('preview-a4');
+  const toggleEditModeBtn = document.getElementById('toggle-edit-mode-btn');
+  const downloadPdfBtn = document.getElementById('download-pdf-btn');
+  const downloadDocBtn = document.getElementById('download-doc-btn');
+  const shareWhatsapp = document.getElementById('share-whatsapp');
+  const shareGmail = document.getElementById('share-gmail');
+  const shareTwitter = document.getElementById('share-twitter');
+  const shareLinkedIn = document.getElementById('share-linkedin');
+  const shareFacebook = document.getElementById('share-facebook');
+  const inlineEditorToolbar = document.getElementById('inline-editor-toolbar');
+  const fontFamilySelect = document.getElementById('font-family-select');
+  const fontSizeSelect = document.getElementById('font-size-select');
+  const boldBtn = document.getElementById('bold-btn');
+  const italicBtn = document.getElementById('italic-btn');
+  const underlineBtn = document.getElementById('underline-btn');
+  const alignLeftBtn = document.getElementById('align-left-btn');
+  const alignCenterBtn = document.getElementById('align-center-btn');
+  const alignRightBtn = document.getElementById('align-right-btn');
+
+  let editorSortable = null;
+  const itemSortables = new Map();
+
+  // --- Utility Functions ---
+  function generateID(prefix = 'id') {
+    return prefix + Math.random().toString(36).substr(2, 9);
+  }
+
+  function escapeHtml(text) {
+    return String(text).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  function delegate(parent, selector, type, handler) {
+    parent.addEventListener(type, event => {
+      let target = event.target;
+      while (target && target !== parent) {
+        if (target.matches(selector)) {
+          handler(event, target);
+          return;
+        }
+        target = target.parentElement;
+      }
+    });
+  }
+
+  // --- State Management ---
+  function savePersonalInfo() {
+    state.personal.name = inputName.value.trim();
+    state.personal.title = inputTitle.value.trim();
+    state.personal.contact = inputContact.value.trim();
+    state.personal.summary = inputSummary.value.trim();
+  }
+
+  function loadPersonalInfo() {
+    inputName.value = state.personal.name;
+    inputTitle.value = state.personal.title;
+    inputContact.value = state.personal.contact;
+    inputSummary.value = state.personal.summary;
+  }
+
+  function createEmptyItem(type) {
+    const fields = sectionTypes[type]?.fields || ['title', 'description'];
+    const fieldsObject = {};
+    for (const f of fields) fieldsObject[f] = '';
+    return { id: generateID('item_'), fields: fieldsObject };
+  }
+
+  function addSection(type) {
+    if (!sectionTypes[type]) type = 'Custom';
+    const newSection = {
+      id: generateID('sec_'),
+      type: type,
+      title: type,
+      items: []
+    };
+    if (type !== 'Skills' && type !== 'Interests' && type !== 'Languages') {
+      newSection.items.push(createEmptyItem(type));
+    }
+    state.sections.push(newSection);
+    renderSectionsList();
+    renderPreview();
+  }
+
+  function removeSection(secId) {
+    const index = state.sections.findIndex(s => s.id === secId);
+    if (index >= 0) {
+      state.sections.splice(index, 1);
+      renderSectionsList();
+      renderPreview();
+    }
+  }
+
+  function duplicateSection(secId) {
+    const original = state.sections.find(s => s.id === secId);
+    if (original) {
+      const copy = JSON.parse(JSON.stringify(original));
+      copy.id = generateID('sec_');
+      copy.items = copy.items.map(item => ({ id: generateID('item_'), fields: { ...item.fields } }));
+      state.sections.push(copy);
+      renderSectionsList();
+      renderPreview();
+    }
+  }
+
+  function moveSection(secId, direction) {
+    const idx = state.sections.findIndex(s => s.id === secId);
+    if (idx < 0) return;
+    let newIndex = direction === 'up' ? idx - 1 : idx + 1;
+    if (newIndex < 0 || newIndex >= state.sections.length) return;
+    const [section] = state.sections.splice(idx, 1);
+    state.sections.splice(newIndex, 0, section);
+    renderSectionsList();
+    renderPreview();
+  }
+
+  function changeSectionType(secId, newType) {
+    if (!sectionTypes[newType]) newType = 'Custom';
+    const section = state.sections.find(s => s.id === secId);
+    if (!section) return;
+
+    const oldType = section.type;
+    if (oldType === newType) return;
+
+    const newFields = sectionTypes[newType]?.fields || [];
+    for (const item of section.items) {
+      const newFieldsObj = {};
+      for (const nf of newFields) {
+        newFieldsObj[nf] = item.fields[nf] || '';
+      }
+      item.fields = newFieldsObj;
+    }
+    section.type = newType;
+    section.title = newType;
+    renderSectionsList();
+    renderPreview();
+  }
+
+  function addItemToSection(secId) {
+    const section = state.sections.find(s => s.id === secId);
+    if (!section) return;
+    section.items.push(createEmptyItem(section.type));
+    renderSectionsList();
+    renderPreview();
+  }
+
+  function removeItem(secId, itemId) {
+    const section = state.sections.find(s => s.id === secId);
+    if (!section) return;
+    const idx = section.items.findIndex(i => i.id === itemId);
+    if (idx < 0) return;
+    section.items.splice(idx, 1);
+    renderSectionsList();
+    renderPreview();
+  }
+
+  function updateItemField(secId, itemId, fieldName, value) {
+    const section = state.sections.find(s => s.id === secId);
+    if (!section) return;
+    const item = section.items.find(i => i.id === itemId);
+    if (!item) return;
+    item.fields[fieldName] = value;
+    renderPreview();
+  }
+
+  function updateSectionTitle(secId, value) {
+    const section = state.sections.find(s => s.id === secId);
+    if (!section) return;
+    section.title = value.trim() || section.type;
+    renderPreview();
+  }
+
+  function updatePrimaryColor(color) {
+    document.documentElement.style.setProperty('--primary-color', color);
+  }
+
+  // --- Rendering Functions ---
+  function renderSectionsList() {
+    sectionsList.innerHTML = '';
+    for (const section of state.sections) {
+      const secDiv = document.createElement('div');
+      secDiv.className = 'section-block';
+      secDiv.dataset.secId = section.id;
+
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      header.innerHTML = `
+        <span class="handle" aria-label="Drag section" title="Drag section">☰</span>
+        <input class="section-title" type="text" aria-label="Edit section title" value="${escapeHtml(section.title)}" />
+        <select class="section-type" aria-label="Change section type">
+          ${Object.keys(sectionTypes).map(type =>
+            `<option value="${type}"${type === section.type ? ' selected' : ''}>${type}</option>`
+          ).join('')}
+        </select>
+        <div class="section-buttons" aria-label="Section controls">
+          <button class="btn-move-up" aria-label="Move section up" title="Move Up"><i class="fa-solid fa-caret-up"></i></button>
+          <button class="btn-move-down" aria-label="Move section down" title="Move Down"><i class="fa-solid fa-caret-down"></i></button>
+          <button class="btn-duplicate" aria-label="Duplicate section" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
+          <button class="btn-delete" aria-label="Delete section" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `;
+      secDiv.appendChild(header);
+
+      const content = document.createElement('div');
+      content.className = 'section-content';
+
+      const ul = document.createElement('ul');
+      ul.className = 'items-list';
+      ul.dataset.sectionId = section.id;
+
+      for (const item of section.items) {
+        const li = document.createElement('li');
+        li.className = 'item-block';
+        li.dataset.itemId = item.id;
+
+        const handleSpan = document.createElement('span');
+        handleSpan.className = 'item-handle';
+        handleSpan.role = 'button';
+        handleSpan.tabIndex = 0;
+        handleSpan.title = 'Drag item';
+        handleSpan.ariaLabel = 'Drag item';
+        handleSpan.innerHTML = '<i class="fa-solid fa-grip-lines"></i>';
+
+        const inputsDiv = document.createElement('div');
+        inputsDiv.className = 'item-inputs';
+
+        Object.entries(item.fields).forEach(([field, val]) => {
+          const labelId = generateID('label_');
+          const label = document.createElement('label');
+          label.setAttribute('for', labelId);
+          label.style.fontSize = '0.78rem';
+          label.style.color = '#666';
+          label.style.userSelect = 'none';
+          label.textContent = field[0].toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1');
+
+          let input;
+          if (field.toLowerCase().includes('description') || field.toLowerCase().includes('desc')) {
+            input = document.createElement('textarea');
+            input.rows = 2;
+          } else {
+            input = document.createElement('input');
+            input.type = 'text';
+          }
+          input.id = labelId;
+          input.value = val;
+          input.dataset.secId = section.id;
+          input.dataset.itemId = item.id;
+          input.dataset.field = field;
+          input.setAttribute('aria-label', `${label.textContent} input`);
+          input.style.fontSize = '0.9rem';
+
+          inputsDiv.appendChild(label);
+          inputsDiv.appendChild(input);
+        });
+
+        const btnsDiv = document.createElement('div');
+        btnsDiv.className = 'item-buttons';
+        btnsDiv.innerHTML = `<button class="btn-delete-item" aria-label="Delete item" title="Delete Item"><i class="fa-solid fa-trash-can"></i></button>`;
+
+        li.appendChild(handleSpan);
+        li.appendChild(inputsDiv);
+        li.appendChild(btnsDiv);
+        ul.appendChild(li);
+      }
+
+      content.appendChild(ul);
+      const addItemBtn = document.createElement('button');
+      addItemBtn.className = 'add-item-btn';
+      addItemBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+      addItemBtn.dataset.secId = section.id;
+      addItemBtn.title = 'Add item to this section';
+      content.appendChild(addItemBtn);
+
+      secDiv.appendChild(content);
+      sectionsList.appendChild(secDiv);
+    }
+
+    if (editorSortable) editorSortable.destroy();
+    editorSortable = new Sortable(sectionsList, {
+      animation: 150,
+      handle: '.handle',
+      ghostClass: 'sortable-ghost',
+      onEnd(evt) {
+        const moved = state.sections.splice(evt.oldIndex, 1)[0];
+        state.sections.splice(evt.newIndex, 0, moved);
+        renderPreview();
+      }
+    });
+
+    document.querySelectorAll('.items-list').forEach(ul => {
+      if (itemSortables.get(ul)) itemSortables.get(ul).destroy();
+
+      const sectionId = ul.dataset.sectionId;
+      const sortable = new Sortable(ul, {
+        animation: 150,
+        handle: '.item-handle',
+        ghostClass: 'sortable-ghost',
+        onEnd(evt) {
+          const section = state.sections.find(s => s.id === sectionId);
+          if (!section) return;
+          const movedItem = section.items.splice(evt.oldIndex, 1)[0];
+          section.items.splice(evt.newIndex, 0, movedItem);
+          renderPreview();
+        }
+      });
+      itemSortables.set(ul, sortable);
+    });
+  }
+
+  function renderPreview() {
+    document.body.className = `template-${state.template}`;
+    updatePrimaryColor(state.primaryColor);
+
+    let html = '';
+    const nameSafe = escapeHtml(state.personal.name || '');
+    const titleSafe = escapeHtml(state.personal.title || '');
+    html += `<h1 style="font-size: 2.0rem; margin-bottom: 0.1em;">${nameSafe}</h1>`;
+    if (titleSafe) html += `<h2 style="font-weight: normal; font-size: 1.2rem; margin-top: 0; margin-bottom: 0.7em; color: var(--primary-color);">${titleSafe}</h2>`;
+
+    if (state.personal.contact) {
+      const contactHtml = escapeHtml(state.personal.contact).replace(/\n/g, '<br>');
+      html += `<div style="font-size: 0.85rem; margin-bottom: 1.2em; color: #444;">${contactHtml}</div>`;
+    }
+
+    if (state.personal.summary) {
+      const summaryHtml = escapeHtml(state.personal.summary).replace(/\n/g, '<br>');
+      html += `<section><h3 class="section-title" aria-label="Professional Summary">Summary</h3><p>${summaryHtml}</p></section>`;
+    }
+
+    for (const sec of state.sections) {
+      html += `<section aria-label="${sec.title}" tabindex="0">`;
+      html += `<h3 class="section-title">${escapeHtml(sec.title)}</h3>`;
+      if (sec.items.length === 0) {
+        html += `<p style="color:#999; font-style: italic;">(No entries)</p>`;
+      } else {
+        for (const item of sec.items) {
+          const getField = (f) => escapeHtml(item.fields[f] || '');
+
+          html += `<div class="section-item">`;
+
+          switch (sec.type) {
+            case 'Experience':
+            case 'Education':
+            case 'Projects':
+            case 'Volunteer':
+              html += `<div class="item-title">${getField(sectionTypes[sec.type].fields[0])}${sec.type === 'Experience' ? ' at ' + getField(sectionTypes[sec.type].fields[1]) : (sec.type === 'Projects' ? ' (' + getField(sectionTypes[sec.type].fields[1]) + ')' : '')}</div>`;
+              if (sec.type === 'Experience' || sec.type === 'Education' || sec.type === 'Volunteer') {
+                html += `<div class="item-subtitle">${getField(sectionTypes[sec.type].fields[2])} – ${getField(sectionTypes[sec.type].fields[3])}</div>`;
+              }
+              if (item.fields.description) html += `<p class="item-desc">${getField('description').replace(/\n/g, '<br>')}</p>`;
+              break;
+
+            case 'Skills':
+            case 'Languages':
+            case 'Interests':
+              const field1 = getField(sectionTypes[sec.type].fields[0]);
+              const field2 = getField(sectionTypes[sec.type].fields[1]);
+              html += `<div>${field1}${field2 ? `: <small>${field2}</small>` : ''}</div>`;
+              break;
+
+            case 'Certifications':
+            case 'Awards':
+            case 'Publications':
+              html += `<div class="item-title">${getField(sectionTypes[sec.type].fields[0])}</div>`;
+              html += `<div class="item-subtitle">${getField(sectionTypes[sec.type].fields[1])} — ${getField(sectionTypes[sec.type].fields[2])}</div>`;
+              if (item.fields.description) html += `<p class="item-desc">${getField('description').replace(/\n/g, '<br>')}</p>`;
+              break;
+
+            case 'Custom':
+              html += `<div class="item-title">${getField('title')}</div>`;
+              if (item.fields.description) html += `<p class="item-desc">${getField('description').replace(/\n/g, '<br>')}</p>`;
+              break;
+
+            default:
+              for (const [k, v] of Object.entries(item.fields)) {
+                if (v) html += `<div><strong>${escapeHtml(k)}:</strong> ${escapeHtml(v)}</div>`;
+              }
+          }
+          html += `</div>`;
+        }
+      }
+      html += `</section>`;
+    }
+    previewA4.innerHTML = html;
+  }
+
+  function downloadPDF() {
+    const element = previewA4;
+    const opt = {
+        margin: [10, 15, 10, 15], // Top, Left, Bottom, Right margin in mm
+        filename: `resume_${state.personal.name || 'document'}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, logging: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { before: '.pagebreak' } // This is a placeholder for a page break class if you want to add one manually
+    };
+    html2pdf().set(opt).from(element).save();
+  }
+
+  function downloadDOCX() {
+    const content = previewA4.innerHTML;
+    const htmlString = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: ${document.body.style.fontFamily || 'sans-serif'}; margin: 40px; }
+        .page-header { font-size: 20px; text-align: center; }
+        h1, h2, h3, p { margin: 0; padding: 0; }
+        .section-title { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); margin-top: 1.5rem; }
+        .item-title { font-weight: bold; }
+        .item-subtitle { font-style: italic; color: #555; }
+        /* Add more styles to match your resume template */
+      </style>
+    </head>
+    <body>${content}</body></html>`;
+
+    const blob = new Blob([htmlString], { type: 'application/msword' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `resume_${state.personal.name || 'document'}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function toggleInlineEditMode() {
+    state.editingPreview = !state.editingPreview;
+    previewA4.contentEditable = state.editingPreview;
+    toggleEditModeBtn.textContent = state.editingPreview ? 'Disable Inline Edit' : 'Toggle Inline Edit Preview';
+    if (!state.editingPreview) {
+      inlineEditorToolbar.style.display = 'none';
+      saveInlineChanges();
+    }
+    previewA4.focus();
+  }
+
+  function saveInlineChanges() {
+    // This is a simple update. For a real app, you'd need a more robust way to sync changes back to the state object.
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = previewA4.innerHTML;
+
+    // Update personal info from preview
+    state.personal.name = tempDiv.querySelector('h1')?.textContent.trim() || '';
+    state.personal.title = tempDiv.querySelector('h2')?.textContent.trim() || '';
+    state.personal.contact = tempDiv.querySelector('div[style*="font-size: 0.85rem"]')?.innerHTML.replace(/<br>/g, '\n').trim() || '';
+    state.personal.summary = tempDiv.querySelector('section > p')?.innerHTML.replace(/<br>/g, '\n').trim() || '';
+
+    // Update sections from preview (complex, but here's a basic concept)
+    const sections = tempDiv.querySelectorAll('section');
+    sections.forEach(secEl => {
+      const title = secEl.querySelector('.section-title')?.textContent.trim();
+      const stateSection = state.sections.find(s => s.title === title);
+      if (stateSection) {
+        const items = secEl.querySelectorAll('.section-item');
+        items.forEach((itemEl, index) => {
+          if (stateSection.items[index]) {
+            // Update fields based on a predictable structure
+            // This part is a placeholder as a full sync is complex
+            stateSection.items[index].fields.description = itemEl.querySelector('.item-desc')?.innerHTML.replace(/<br>/g, '\n').trim() || '';
+          }
+        });
+      }
+    });
+
+    loadPersonalInfo();
+    renderPreview();
+  }
+
+  function updateToolbarPosition(range) {
+    const rect = range.getBoundingClientRect();
+    const previewRect = previewA4.getBoundingClientRect();
+    inlineEditorToolbar.style.left = `${rect.left - previewRect.left + (rect.width / 2) - (inlineEditorToolbar.offsetWidth / 2)}px`;
+    inlineEditorToolbar.style.top = `${rect.top - previewRect.top - inlineEditorToolbar.offsetHeight - 10}px`;
+    inlineEditorToolbar.style.display = 'flex';
+  }
+
+  function applyStyle(command, value = null) {
+    document.execCommand(command, false, value);
+    if (command === 'bold' || command === 'italic' || command === 'underline') {
+      const btn = document.getElementById(`${command}-btn`);
+      btn.classList.toggle('active-style', document.queryCommandState(command));
+    }
+    if (command === 'justifyLeft' || command === 'justifyCenter' || command === 'justifyRight') {
+      alignLeftBtn.classList.toggle('active-style', document.queryCommandState('justifyLeft'));
+      alignCenterBtn.classList.toggle('active-style', document.queryCommandState('justifyCenter'));
+      alignRightBtn.classList.toggle('active-style', document.queryCommandState('justifyRight'));
+    }
+  }
+
+  function updateToolbarState() {
+    boldBtn.classList.toggle('active-style', document.queryCommandState('bold'));
+    italicBtn.classList.toggle('active-style', document.queryCommandState('italic'));
+    underlineBtn.classList.toggle('active-style', document.queryCommandState('underline'));
+    alignLeftBtn.classList.toggle('active-style', document.queryCommandState('justifyLeft'));
+    alignCenterBtn.classList.toggle('active-style', document.queryCommandState('justifyCenter'));
+    alignRightBtn.classList.toggle('active-style', document.queryCommandState('justifyRight'));
+  }
+
+  // --- Event Listeners ---
+  [inputName, inputTitle, inputContact, inputSummary].forEach(input => {
+    input.addEventListener('input', () => {
+      savePersonalInfo();
+      renderPreview();
+    });
+  });
+
+  addSectionBtn.addEventListener('click', () => {
+    addSection(addSectionSelect.value);
+  });
+
+  delegate(sectionsList, 'input.section-title', 'input', (e, target) => {
+    updateSectionTitle(target.closest('.section-block').dataset.secId, target.value);
+  });
+
+  delegate(sectionsList, 'select.section-type', 'change', (e, target) => {
+    changeSectionType(target.closest('.section-block').dataset.secId, target.value);
+  });
+
+  delegate(sectionsList, 'button.btn-delete', 'click', (e, btn) => {
+    if (confirm('Delete this entire section?')) removeSection(btn.closest('.section-block').dataset.secId);
+  });
+
+  delegate(sectionsList, 'button.btn-duplicate', 'click', (e, btn) => {
+    duplicateSection(btn.closest('.section-block').dataset.secId);
+  });
+
+  delegate(sectionsList, 'button.btn-move-up', 'click', (e, btn) => {
+    moveSection(btn.closest('.section-block').dataset.secId, 'up');
+  });
+
+  delegate(sectionsList, 'button.btn-move-down', 'click', (e, btn) => {
+    moveSection(btn.closest('.section-block').dataset.secId, 'down');
+  });
+
+  delegate(sectionsList, 'button.add-item-btn', 'click', (e, btn) => {
+    addItemToSection(btn.dataset.secId);
+  });
+
+  delegate(sectionsList, 'button.btn-delete-item', 'click', (e, btn) => {
+    const item = btn.closest('.item-block');
+    const secId = item.closest('.section-block').dataset.secId;
+    removeItem(secId, item.dataset.itemId);
+  });
+
+  delegate(sectionsList, 'input, textarea', 'input', (e, input) => {
+    updateItemField(input.dataset.secId, input.dataset.itemId, input.dataset.field, input.value);
+  });
+
+  templateSelect.addEventListener('change', (e) => {
+    state.template = e.target.value;
+    renderPreview();
+  });
+
+  primaryColorPicker.addEventListener('input', (e) => {
+    state.primaryColor = e.target.value;
+    updatePrimaryColor(state.primaryColor);
+  });
+
+  toggleEditModeBtn.addEventListener('click', toggleInlineEditMode);
+  downloadPdfBtn.addEventListener('click', downloadPDF);
+  downloadDocBtn.addEventListener('click', downloadDOCX);
+
+  // Inline Editor Events
+  previewA4.addEventListener('mouseup', () => {
+    if (!state.editingPreview) return;
+    const selection = window.getSelection();
+    if (!selection.isCollapsed) {
+      updateToolbarPosition(selection.getRangeAt(0));
+      updateToolbarState();
+    } else {
+      inlineEditorToolbar.style.display = 'none';
+    }
+  });
+
+  inlineEditorToolbar.addEventListener('mousedown', (e) => {
+    e.preventDefault(); // Prevents the contenteditable blur event
+  });
+
+  boldBtn.addEventListener('click', () => applyStyle('bold'));
+  italicBtn.addEventListener('click', () => applyStyle('italic'));
+  underlineBtn.addEventListener('click', () => applyStyle('underline'));
+  alignLeftBtn.addEventListener('click', () => applyStyle('justifyLeft'));
+  alignCenterBtn.addEventListener('click', () => applyStyle('justifyCenter'));
+  alignRightBtn.addEventListener('click', () => applyStyle('justifyRight'));
+  fontFamilySelect.addEventListener('change', (e) => applyStyle('fontName', e.target.value));
+  fontSizeSelect.addEventListener('change', (e) => applyStyle('fontSize', e.target.value.replace('px', ''))); // fontSize requires a number
+
+  // Dynamic Share Links
+  function generateShareUrl() {
+    const resumeUrl = window.location.href;
+    const title = 'Check out my resume!';
+    const text = `I just created my resume using this amazing builder. Take a look: ${resumeUrl}`;
+    return { title, text };
+  }
+
+  shareWhatsapp.addEventListener('click', (e) => {
+    e.preventDefault();
+    const { text } = generateShareUrl();
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  });
+
+  shareGmail.addEventListener('click', (e) => {
+    e.preventDefault();
+    const { text, title } = generateShareUrl();
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(title)}&body=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  });
+
+  shareTwitter.addEventListener('click', (e) => {
+    e.preventDefault();
+    const { text } = generateShareUrl();
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  });
+
+  shareLinkedIn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const { text } = generateShareUrl();
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&summary=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  });
+
+  shareFacebook.addEventListener('click', (e) => {
+    e.preventDefault();
+    const { text } = generateShareUrl();
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  });
+
+  // --- Initialization ---
+  function init() {
+    loadPersonalInfo();
+    renderSectionsList();
+    renderPreview();
+    // Populate font select dropdowns
+    fontSizes.forEach(size => {
+      const option = document.createElement('option');
+      option.value = size;
+      option.textContent = size;
+      fontSizeSelect.appendChild(option);
+    });
+    fontFamilies.forEach(font => {
+      const option = document.createElement('option');
+      option.value = font;
+      option.textContent = font;
+      fontFamilySelect.appendChild(option);
+    });
+  }
+
+  init();
+
+})();
+</script>
+</body>
+</html>
