@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Teleprompter Studio</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+        }
+
+        .sidebar-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .control-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .control-section h3 {
+            margin: 0 0 15px 0;
+            color: #4a5568;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .control-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .range-input {
+            flex: 1;
+        }
+
+        .range-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            color: #8b4513;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #4a5568;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .text-editor {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .editor-header h3 {
+            margin: 0;
+            color: #4a5568;
+            flex: 1;
+        }
+
+        .editor-tools {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tool-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #f7fafc;
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .tool-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .tool-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        #textEditor {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        #textEditor:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .teleprompter-container {
+            flex: 1;
+            background: #000;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border: 3px solid #333;
+            min-height: 400px;
+        }
+
+        .teleprompter-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-playing {
+            background: rgba(76, 175, 80, 0.9);
+        }
+
+        .status-paused {
+            background: rgba(255, 152, 0, 0.9);
+        }
+
+        .status-ready {
+            background: rgba(102, 126, 234, 0.9);
+        }
+
+        .teleprompter-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .overlay-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .overlay-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .teleprompter-screen {
+            height: 100%;
+            padding: 60px 40px 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .teleprompter-text {
+            color: #fff;
+            line-height: 1.8;
+            font-weight: 500;
+            text-align: center;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            transition: transform 0.1s linear;
+            font-family: 'Georgia', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: white;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+
+        .mirrored {
+            transform: scaleX(-1);
+        }
+
+        .fullscreen-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            border-radius: 0;
+        }
+
+        .language-samples {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .sample-card {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .sample-card:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .sample-card h4 {
+            margin: 0 0 8px 0;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .sample-card p {
+            margin: 0;
+            color: #718096;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .word-highlight {
+            background: rgba(255, 255, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .current-word {
+            background: rgba(255, 255, 0, 0.6);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+                height: 100vh;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 60px 10px 10px;
+            }
+
+            .text-editor {
+                order: 2;
+            }
+
+            .teleprompter-container {
+                order: 1;
+                min-height: 300px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #f7fafc;
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .recording-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator.recording {
+            background: #ef4444;
+            animation: recordingPulse 1s infinite;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        .status-indicator.processing {
+            background: #f59e0b;
+            animation: processingPulse 0.8s infinite;
+        }
+
+        @keyframes recordingPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        @keyframes processingPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .download-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .download-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .recording-preview {
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            display: none;
+        }
+
+        .recording-preview video,
+        .recording-preview audio {
+            width: 100%;
+            height: auto;
+        }
+
+        .noise-suppression-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 6px;
+            font-size: 12px;
+            color: #059669;
+        }
+
+        .noise-level {
+            flex: 1;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .noise-level-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-toggle" id="mobileToggle">☰</button>
+    
+    <div class="app-container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>🎬 Teleprompter Studio</h1>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Playback Controls -->
+                <div class="control-section fade-in">
+                    <h3>🎮 Playback Controls</h3>
+                    <button class="btn btn-primary" id="playBtn">
+                        ▶️ Play
+                    </button>
+                    <button class="btn btn-secondary" id="pauseBtn">
+                        ⏸️ Pause
+                    </button>
+                    <button class="btn btn-success" id="resetBtn">
+                        🔄 Reset
+                    </button>
+                    <button class="btn btn-warning" id="fullscreenBtn">
+                        🔳 Fullscreen
+                    </button>
+                </div>
+
+                <!-- Speed & Display Settings -->
+                <div class="control-section fade-in">
+                    <h3>⚙️ Display Settings</h3>
+                    
+                    <div class="control-group">
+                        <label for="speedControl">Scroll Speed</label>
+                        <div class="range-container">
+                            <input type="range" id="speedControl" class="control-input range-input" min="0.5" max="15" value="3" step="0.5">
+                            <span class="range-value" id="speedValue">3</span>
+                        </div>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" data-speed="1">Slow</button>
+                            <button class="preset-btn" data-speed="3">Normal</button>
+                            <button class="preset-btn" data-speed="6">Fast</button>
+                            <button class="preset-btn" data-speed="10">Rapid</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="fontSizeControl">Font Size (px)</label>
+                        <div class="range-container">
+                            <input type="range" id="fontSizeControl" class="control-input range-input" min="16" max="96" value="32" step="2">
+                            <span class="range-value" id="fontSizeValue">32</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="lineHeightControl">Line Height</label>
+                        <div class="range-container">
+                            <input type="range" id="lineHeightControl" class="control-input range-input" min="1.2" max="3" value="1.8" step="0.1">
+                            <span class="range-value" id="lineHeightValue">1.8</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="textColorControl">Text Color</label>
+                        <input type="color" id="textColorControl" class="control-input" value="#ffffff">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="backgroundColorControl">Background Color</label>
+                        <input type="color" id="backgroundColorControl" class="control-input" value="#000000">
+                    </div>
+                </div>
+
+                <!-- Language & Font Settings -->
+                <div class="control-section fade-in">
+                    <h3>🌐 Language & Font</h3>
+                    
+                    <div class="control-group">
+                        <label for="languageSelect">Language</label>
+                        <select id="languageSelect" class="control-input">
+                            <option value="en">English</option>
+                            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                            <option value="te">తెలుగు (Telugu)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="fontFamilySelect">Font Family</label>
+                        <select id="fontFamilySelect" class="control-input">
+                            <option value="Georgia, serif">Georgia (Serif)</option>
+                            <option value="Arial, sans-serif">Arial (Sans-serif)</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Recording Studio -->
+                <div class="control-section fade-in">
+                    <h3>🎥 Recording Studio</h3>
+                    
+                    <div class="control-group">
+                        <label for="recordingQuality">Video Quality</label>
+                        <select id="recordingQuality" class="control-input">
+                            <option value="4k">4K Ultra HD (3840×2160)</option>
+                            <option value="1080p" selected>Full HD (1920×1080)</option>
+                            <option value="720p">HD (1280×720)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="audioQuality">Audio Quality</label>
+                        <select id="audioQuality" class="control-input">
+                            <option value="high" selected>High (48kHz, Stereo)</option>
+                            <option value="medium">Medium (44.1kHz, Stereo)</option>
+                            <option value="low">Low (22kHz, Mono)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary" id="startRecordingBtn">
+                        🔴 Start Recording
+                    </button>
+                    
+                    <button class="btn btn-secondary" id="stopRecordingBtn" disabled>
+                        ⏹️ Stop Recording
+                    </button>
+                    
+                    <button class="btn btn-success" id="audioOnlyBtn">
+                        🎤 Audio Only
+                    </button>
+
+                    <div class="recording-status" id="recordingStatus">
+                        <div class="status-indicator" id="recordingIndicator"></div>
+                        <span id="recordingTime">00:00</span>
+                        <span id="recordingSize">0 MB</span>
+                    </div>
+
+                    <div class="noise-suppression-indicator" id="noiseIndicator" style="display: none;">
+                        <span>🔇 Noise Level:</span>
+                        <div class="noise-level">
+                            <div class="noise-level-bar" id="noiseLevelBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="recording-preview" id="recordingPreview">
+                        <!-- Preview will be inserted here -->
+                    </div>
+
+                    <div id="downloadContainer"></div>
+                </div>
+
+                <!-- Advanced Features -->
+                <div class="control-section fade-in">
+                    <h3>🚀 Advanced Features</h3>
+                    
+                    <button class="btn btn-info" id="mirrorToggle">
+                        🔄 Mirror Mode
+                    </button>
+                    
+                    <button class="btn btn-info" id="wordHighlightToggle">
+                        ✨ Word Highlight
+                    </button>
+                    
+                    <button class="btn btn-info" id="autoScrollToggle">
+                        🤖 Auto-Scroll
+                    </button>
+
+                    <button class="btn btn-info" id="noiseSuppressionToggle">
+                        🔇 Noise Suppression
+                    </button>
+
+                    <div class="timer-display" id="timerDisplay">
+                        00:00:00
+                    </div>
+                </div>
+
+                <!-- Sample Scripts -->
+                <div class="control-section fade-in">
+                    <h3>📝 Sample Scripts</h3>
+                    <div class="language-samples">
+                        <div class="sample-card" data-lang="en">
+                            <h4>🇺🇸 English News Script</h4>
+                            <p>Professional news teleprompter sample</p>
+                        </div>
+                        <div class="sample-card" data-lang="kn">
+                            <h4>🇮🇳 ಕನ್ನಡ ಸುದ್ದಿ</h4>
+                            <p>ವೃತ್ತಿಪರ ಸುದ್ದಿ ಟೆಲಿಪ್ರಾಂಪ್ಟರ್ ಮಾದರಿ</p>
+                        </div>
+                        <div class="sample-card" data-lang="te">
+                            <h4>🇮🇳 తెలుగు వార్తలు</h4>
+                            <p>వృత్తిపరమైన వార్తా టెలిప్రాంప్టర్ నమూనా</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="text-editor fade-in">
+                <div class="editor-header">
+                    <h3>📝 Script Editor</h3>
+                    <div class="editor-tools">
+                        <button class="tool-btn" id="boldBtn">B</button>
+                        <button class="tool-btn" id="italicBtn">I</button>
+                        <button class="tool-btn" id="clearBtn">Clear</button>
+                        <button class="tool-btn" id="saveBtn">Save</button>
+                        <button class="tool-btn" id="loadBtn">Load</button>
+                    </div>
+                </div>
+                <textarea id="textEditor" placeholder="Enter your script here or select a sample from the sidebar..."></textarea>
+            </div>
+
+            <div class="teleprompter-container fade-in" id="teleprompterContainer">
+                <div class="teleprompter-overlay">
+                    <div class="status-indicators">
+                        <div class="status-badge status-ready" id="statusBadge">Ready</div>
+                        <div class="status-badge status-ready" id="wordCountBadge">0 words</div>
+                    </div>
+                    <div class="teleprompter-controls">
+                        <button class="overlay-btn" id="overlayPlayBtn">▶️</button>
+                        <button class="overlay-btn" id="overlayPauseBtn">⏸️</button>
+                        <button class="overlay-btn" id="overlayResetBtn">🔄</button>
+                    </div>
+                </div>
+                
+                <div class="teleprompter-screen" id="teleprompterScreen">
+                    <div class="teleprompter-text" id="teleprompterText">
+                        Welcome to Professional Teleprompter Studio!
+                        
+                        Enter your script in the editor above or select a sample from the sidebar to get started.
+                        
+                        Use the controls to adjust speed, font size, and other settings for the perfect reading experience.
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ProfessionalTeleprompter {
+            constructor() {
+                this.isPlaying = false;
+                this.currentPosition = 0;
+                this.speed = 3;
+                this.fontSize = 32;
+                this.lineHeight = 1.8;
+                this.animationId = null;
+                this.isMirrored = false;
+                this.isFullscreen = false;
+                this.wordHighlight = false;
+                this.autoScroll = true;
+                this.startTime = null;
+                this.currentWordIndex = 0;
+                this.words = [];
+                
+                // Recording state
+                this.mediaRecorder = null;
+                this.recordedChunks = [];
+                this.isRecording = false;
+                this.recordingStartTime = null;
+                this.recordingType = 'video'; // 'video' or 'audio'
+                this.noiseSuppressionEnabled = false;
+                this.audioContext = null;
+                this.noiseGate = null;
+                this.analyser = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadSampleTexts();
+                this.loadSettings();
+                this.updateTimer();
+            }
+
+            initializeElements() {
+                // Control elements
+                this.playBtn = document.getElementById('playBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.fullscreenBtn = document.getElementById('fullscreenBtn');
+                
+                // Overlay controls
+                this.overlayPlayBtn = document.getElementById('overlayPlayBtn');
+                this.overlayPauseBtn = document.getElementById('overlayPauseBtn');
+                this.overlayResetBtn = document.getElementById('overlayResetBtn');
+                
+                // Settings controls
+                this.speedControl = document.getElementById('speedControl');
+                this.speedValue = document.getElementById('speedValue');
+                this.fontSizeControl = document.getElementById('fontSizeControl');
+                this.fontSizeValue = document.getElementById('fontSizeValue');
+                this.lineHeightControl = document.getElementById('lineHeightControl');
+                this.lineHeightValue = document.getElementById('lineHeightValue');
+                this.textColorControl = document.getElementById('textColorControl');
+                this.backgroundColorControl = document.getElementById('backgroundColorControl');
+                this.languageSelect = document.getElementById('languageSelect');
+                this.fontFamilySelect = document.getElementById('fontFamilySelect');
+                
+                // Feature toggles
+                this.mirrorToggle = document.getElementById('mirrorToggle');
+                this.wordHighlightToggle = document.getElementById('wordHighlightToggle');
+                this.autoScrollToggle = document.getElementById('autoScrollToggle');
+                this.noiseSuppressionToggle = document.getElementById('noiseSuppressionToggle');
+                
+                // Recording elements
+                this.startRecordingBtn = document.getElementById('startRecordingBtn');
+                this.stopRecordingBtn = document.getElementById('stopRecordingBtn');
+                this.audioOnlyBtn = document.getElementById('audioOnlyBtn');
+                this.recordingQuality = document.getElementById('recordingQuality');
+                this.audioQuality = document.getElementById('audioQuality');
+                this.recordingIndicator = document.getElementById('recordingIndicator');
+                this.recordingTime = document.getElementById('recordingTime');
+                this.recordingSize = document.getElementById('recordingSize');
+                this.recordingPreview = document.getElementById('recordingPreview');
+                this.downloadContainer = document.getElementById('downloadContainer');
+                this.noiseIndicator = document.getElementById('noiseIndicator');
+                this.noiseLevelBar = document.getElementById('noiseLevelBar');
+                
+                // Display elements
+                this.textEditor = document.getElementById('textEditor');
+                this.teleprompterText = document.getElementById('teleprompterText');
+                this.teleprompterScreen = document.getElementById('teleprompterScreen');
+                this.teleprompterContainer = document.getElementById('teleprompterContainer');
+                this.statusBadge = document.getElementById('statusBadge');
+                this.wordCountBadge = document.getElementById('wordCountBadge');
+                this.progressBar = document.getElementById('progressBar');
+                this.timerDisplay = document.getElementById('timerDisplay');
+                
+                // Mobile elements
+                this.mobileToggle = document.getElementById('mobileToggle');
+                this.sidebar = document.getElementById('sidebar');
+            }
+
+            bindEvents() {
+                // Playback controls
+                this.playBtn.addEventListener('click', () => this.play());
+                this.pauseBtn.addEventListener('click', () => this.pause());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                this.fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
+                
+                // Overlay controls
+                this.overlayPlayBtn.addEventListener('click', () => this.play());
+                this.overlayPauseBtn.addEventListener('click', () => this.pause());
+                this.overlayResetBtn.addEventListener('click', () => this.reset());
+                
+                // Settings controls
+                this.speedControl.addEventListener('input', (e) => this.updateSpeed(e.target.value));
+                this.fontSizeControl.addEventListener('input', (e) => this.updateFontSize(e.target.value));
+                this.lineHeightControl.addEventListener('input', (e) => this.updateLineHeight(e.target.value));
+                this.textColorControl.addEventListener('input', (e) => this.updateTextColor(e.target.value));
+                this.backgroundColorControl.addEventListener('input', (e) => this.updateBackgroundColor(e.target.value));
+                this.languageSelect.addEventListener('change', () => this.updateLanguageFont());
+                this.fontFamilySelect.addEventListener('change', (e) => this.updateFontFamily(e.target.value));
+                
+                // Feature toggles
+                this.mirrorToggle.addEventListener('click', () => this.toggleMirror());
+                this.wordHighlightToggle.addEventListener('click', () => this.toggleWordHighlight());
+                this.autoScrollToggle.addEventListener('click', () => this.toggleAutoScroll());
+                this.noiseSuppressionToggle.addEventListener('click', () => this.toggleNoiseSuppression());
+                
+                // Recording controls
+                this.startRecordingBtn.addEventListener('click', () => this.startRecording());
+                this.stopRecordingBtn.addEventListener('click', () => this.stopRecording());
+                this.audioOnlyBtn.addEventListener('click', () => this.startAudioRecording());
+                
+                // Text editor
+                this.textEditor.addEventListener('input', () => this.updateTeleprompterText());
+                
+                // Preset speed buttons
+                document.querySelectorAll('.preset-btn[data-speed]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const speed = parseFloat(e.target.dataset.speed);
+                        this.speedControl.value = speed;
+                        this.updateSpeed(speed);
+                    });
+                });
+                
+                // Sample cards
+                document.querySelectorAll('.sample-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const lang = card.dataset.lang;
+                        this.languageSelect.value = lang;
+                        this.textEditor.value = this.sampleTexts[lang];
+                        this.updateTeleprompterText();
+                        this.updateLanguageFont();
+                        this.reset();
+                        card.classList.add('pulse');
+                        setTimeout(() => card.classList.remove('pulse'), 1000);
+                    });
+                });
+                
+                // Editor tools
+                document.getElementById('clearBtn').addEventListener('click', () => {
+                    this.textEditor.value = '';
+                    this.updateTeleprompterText();
+                });
+                
+                document.getElementById('saveBtn').addEventListener('click', () => this.saveScript());
+                document.getElementById('loadBtn').addEventListener('click', () => this.loadScript());
+                
+                // Mobile toggle
+                this.mobileToggle.addEventListener('click', () => {
+                    this.sidebar.classList.toggle('open');
+                });
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+                    
+                    switch(e.code) {
+                        case 'Space':
+                            e.preventDefault();
+                            this.isPlaying ? this.pause() : this.play();
+                            break;
+                        case 'Escape':
+                            if (this.isFullscreen) this.toggleFullscreen();
+                            else this.reset();
+                            break;
+                        case 'KeyF':
+                            if (e.ctrlKey || e.metaKey) {
+                                e.preventDefault();
+                                this.toggleFullscreen();
+                            }
+                            break;
+                        case 'KeyM':
+                            if (e.ctrlKey || e.metaKey) {
+                                e.preventDefault();
+                                this.toggleMirror();
+                            }
+                            break;
+                        case 'ArrowUp':
+                            if (e.ctrlKey) {
+                                e.preventDefault();
+                                this.adjustSpeed(0.5);
+                            }
+                            break;
+                        case 'ArrowDown':
+                            if (e.ctrlKey) {
+                                e.preventDefault();
+                                this.adjustSpeed(-0.5);
+                            }
+                            break;
+                    }
+                });
+                
+                // Fullscreen change events
+                document.addEventListener('fullscreenchange', () => this.handleFullscreenChange());
+                document.addEventListener('webkitfullscreenchange', () => this.handleFullscreenChange());
+                document.addEventListener('mozfullscreenchange', () => this.handleFullscreenChange());
+                document.addEventListener('MSFullscreenChange', () => this.handleFullscreenChange());
+            }
+
+            loadSampleTexts() {
+                this.sampleTexts = {
+                    en: `Good evening, I'm reporting live from the newsroom with today's top stories.
+
+In our lead story tonight, technological advances continue to reshape how we communicate and share information across the globe.
+
+The teleprompter has become an essential tool for broadcasters, content creators, and public speakers worldwide, enabling smooth and professional delivery of important messages.
+
+Our advanced teleprompter system features multi-language support, customizable display settings, and professional-grade controls that rival broadcast-quality equipment.
+
+Key features include variable speed control, font customization, mirror mode for hardware compatibility, word highlighting for improved reading flow, and full-screen presentation mode.
+
+Whether you're recording educational content, delivering corporate presentations, or broadcasting live news, this teleprompter provides the reliability and flexibility you need.
+
+The system supports real-time adjustments, allowing presenters to modify speed and display settings without interrupting their delivery.
+
+Advanced features like auto-scroll, timer display, and progress tracking help maintain perfect pacing throughout your presentation.
+
+This has been your technology correspondent, reporting on the latest innovations in presentation technology. Back to you in the studio.`,
+
+                    kn: `ಶುಭ ಸಂಜೆ, ನಾನು ಇಂದಿನ ಪ್ರಮುಖ ಸುದ್ದಿಗಳೊಂದಿಗೆ ಸುದ್ದಿ ಕೊಠಡಿಯಿಂದ ನೇರ ಪ್ರಸಾರ ಮಾಡುತ್ತಿದ್ದೇನೆ.
+
+ಇಂದಿನ ಮುಖ್ಯ ಸುದ್ದಿಯಲ್ಲಿ, ತಾಂತ್ರಿಕ ಪ್ರಗತಿಗಳು ನಾವು ಜಾಗತಿಕವಾಗಿ ಸಂವಹನ ಮತ್ತು ಮಾಹಿತಿ ಹಂಚಿಕೆಯ ವಿಧಾನವನ್ನು ಮರುರೂಪಿಸುವುದನ್ನು ಮುಂದುವರೆಸಿದೆ.
+
+ಟೆಲಿಪ್ರಾಂಪ್ಟರ್ ಪ್ರಸಾರಕರು, ವಿಷಯ ರಚನೆಕಾರರು ಮತ್ತು ಸಾರ್ವಜನಿಕ ಭಾಷಣಕಾರರಿಗೆ ಅತ್ಯಗತ್ಯ ಸಾಧನವಾಗಿದೆ, ಪ್ರಮುಖ ಸಂದೇಶಗಳ ಸುಗಮ ಮತ್ತು ವೃತ್ತಿಪರ ವಿತರಣೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುತ್ತದೆ.
+
+ನಮ್ಮ ಅತ್ಯಾಧುನಿಕ ಟೆಲಿಪ್ರಾಂಪ್ಟರ್ ವ್ಯವಸ್ಥೆಯು ಬಹು-ಭಾಷಾ ಬೆಂಬಲ, ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದಾದ ಪ್ರದರ್ಶನ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಮತ್ತು ಪ್ರಸಾರ-ಗುಣಮಟ್ಟದ ಉಪಕರಣಗಳಿಗೆ ಸಮಾನವಾದ ವೃತ್ತಿಪರ-ದರ್ಜೆಯ ನಿಯಂತ್ರಣಗಳನ್ನು ಒಳಗೊಂಡಿದೆ.
+
+ಮುಖ್ಯ ವೈಶಿಷ್ಟ್ಯಗಳಲ್ಲಿ ವೇರಿಯಬಲ್ ಸ್ಪೀಡ್ ಕಂಟ್ರೋಲ್, ಫಾಂಟ್ ಕಸ್ಟಮೈಸೇಶನ್, ಹಾರ್ಡ್‌ವೇರ್ ಹೊಂದಾಣಿಕೆಗಾಗಿ ಮಿರರ್ ಮೋಡ್, ಸುಧಾರಿತ ಓದುವ ಹರಿವಿಗಾಗಿ ಪದ ಹೈಲೈಟಿಂಗ್ ಮತ್ತು ಪೂರ್ಣ-ಪರದೆ ಪ್ರಸ್ತುತಿ ಮೋಡ್ ಸೇರಿವೆ.
+
+ನೀವು ಶೈಕ್ಷಣಿಕ ವಿಷಯವನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡುತ್ತಿರಲಿ, ಕಾರ್ಪೊರೇಟ್ ಪ್ರಸ್ತುತಿಗಳನ್ನು ನೀಡುತ್ತಿರಲಿ ಅಥವಾ ನೇರ ಸುದ್ದಿ ಪ್ರಸಾರ ಮಾಡುತ್ತಿರಲಿ, ಈ ಟೆಲಿಪ್ರಾಂಪ್ಟರ್ ನಿಮಗೆ ಅಗತ್ಯವಿರುವ ವಿಶ್ವಾಸಾರ್ಹತೆ ಮತ್ತು ನಮ್ಯತೆಯನ್ನು ಒದಗಿಸುತ್ತದೆ.
+
+ಇದು ನಿಮ್ಮ ತಂತ್ರಜ್ಞಾನ ವರದಿಗಾರ, ಪ್ರಸ್ತುತಿ ತಂತ್ರಜ್ಞಾನದಲ್ಲಿನ ಇತ್ತೀಚಿನ ನಾವೀನ್ಯತೆಗಳ ಕುರಿತು ವರದಿ ಮಾಡುತ್ತಿದೆ. ಸ್ಟುಡಿಯೋದಲ್ಲಿ ನಿಮ್ಮ ಬಳಿಗೆ ಹಿಂತಿರುಗುತ್ತೇನೆ.`,
+
+                    te: `శుభ సాయంత్రం, నేను ఈ రోజు ప్రధాన వార్తలతో న్యూస్‌రూమ్ నుండి ప్రత్యక్ష ప్రసారం చేస్తున్నాను.
+
+ఈ రోజు మా ప్రధాన వార్తలో, సాంకేతిక పురోగతులు ప్రపంచవ్యాప్తంగా మనం కమ్యూనికేట్ చేసే మరియు సమాచారాన్ని పంచుకునే విధానాన్ని మార్చడం కొనసాగిస్తున్నాయి.
+
+టెలిప్రాంప్టర్ ప్రసారకులు, కంటెంట్ క్రియేటర్లు మరియు పబ్లిక్ స్పీకర్లకు అవసరమైన సాధనంగా మారింది, ముఖ్యమైన సందేశాల మృదువైన మరియు వృత్తిపరమైన డెలివరీని ప్రారంభిస్తుంది.
+
+మా అధునాతన టెలిప్రాంప్టర్ సిస్టమ్ బహుళ-భాషా మద్దతు, అనుకూలీకరించదగిన డిస్‌ప్లే సెట్టింగ్‌లు మరియు ప్రసార-నాణ్యత పరికరాలకు పోటీపడే వృత్తిపరమైన-గ్రేడ్ నియంత్రణలను కలిగి ఉంది.
+
+ముఖ్య లక్షణాలలో వేరియబుల్ స్పీడ్ కంట్రోల్, ఫాంట్ కస్టమైజేషన్, హార్డ్‌వేర్ అనుకూలత కోసం మిర్రర్ మోడ్, మెరుగైన రీడింగ్ ఫ్లో కోసం వర్డ్ హైలైటింగ్ మరియు పూర్తి-స్క్రీన్ ప్రెజెంటేషన్ మోడ్ ఉన్నాయి.
+
+మీరు విద్యా కంటెంట్‌ను రికార్డ్ చేస్తున్నా, కార్పొరేట్ ప్రెజెంటేషన్‌లు అందిస్తున్నా లేదా లైవ్ న్యూస్ ప్రసారం చేస్తున్నా, ఈ టెలిప్రాంప్టర్ మీకు అవసరమైన విశ్వసనీయత మరియు వశ్యతను అందిస్తుంది.
+
+సిస్టమ్ రియల్-టైమ్ సర్దుబాట్లకు మద్దతు ఇస్తుంది, ప్రెజెంటర్‌లు వారి డెలివరీకి అంతరాయం కలిగించకుండా వేగం మరియు డిస్‌ప్లే సెట్టింగ్‌లను సవరించడానికి అనుమతిస్తుంది.
+
+ఆటో-స్క్రోల్, టైమర్ డిస్‌ప్లే మరియు ప్రోగ్రెస్ ట్రాకింగ్ వంటి అధునాతన లక్షణాలు మీ ప్రెజెంటేషన్ అంతటా పర్ఫెక్ట్ పేసింగ్‌ను నిర్వహించడంలో సహాయపడతాయి.
+
+ఇది మీ టెక్నాలజీ కరస్పాండెంట్, ప్రెజెంటేషన్ టెక్నాలజీలో తాజా ఆవిష్కరణలపై రిపోర్టింగ్ చేస్తోంది. స్టూడియోలో మీ వద్దకు తిరిగి వస్తున్నాను.`
+                };
+            }
+
+            updateSpeed(value) {
+                this.speed = parseFloat(value);
+                this.speedValue.textContent = this.speed;
+                this.saveSettings();
+            }
+
+            updateFontSize(value) {
+                this.fontSize = parseInt(value);
+                this.fontSizeValue.textContent = this.fontSize;
+                this.teleprompterText.style.fontSize = `${this.fontSize}px`;
+                this.saveSettings();
+            }
+
+            updateLineHeight(value) {
+                this.lineHeight = parseFloat(value);
+                this.lineHeightValue.textContent = this.lineHeight;
+                this.teleprompterText.style.lineHeight = this.lineHeight;
+                this.saveSettings();
+            }
+
+            updateTextColor(value) {
+                this.teleprompterText.style.color = value;
+                this.saveSettings();
+            }
+
+            updateBackgroundColor(value) {
+                this.teleprompterScreen.style.background = value;
+                this.saveSettings();
+            }
+
+            updateFontFamily(value) {
+                this.teleprompterText.style.fontFamily = value;
+                this.saveSettings();
+            }
+
+            updateLanguageFont() {
+                const lang = this.languageSelect.value;
+                let fontFamily = this.fontFamilySelect.value;
+                
+                if (lang === 'kn') {
+                    fontFamily = "'Noto Sans Kannada', 'Arial Unicode MS', " + fontFamily;
+                } else if (lang === 'te') {
+                    fontFamily = "'Noto Sans Telugu', 'Arial Unicode MS', " + fontFamily;
+                }
+                
+                this.teleprompterText.style.fontFamily = fontFamily;
+            }
+
+            updateTeleprompterText() {
+                const text = this.textEditor.value || "Enter your script in the editor to get started!";
+                
+                if (this.wordHighlight) {
+                    this.words = text.split(/\s+/).filter(word => word.length > 0);
+                    this.teleprompterText.innerHTML = this.words.map((word, index) => 
+                        `<span class="word-highlight" data-index="${index}">${word}</span>`
+                    ).join(' ');
+                } else {
+                    this.teleprompterText.textContent = text;
+                }
+                
+                this.updateWordCount();
+                this.reset();
+            }
+
+            updateWordCount() {
+                const text = this.textEditor.value || '';
+                const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+                this.wordCountBadge.textContent = `${wordCount} words`;
+            }
+
+            play() {
+                if (!this.textEditor.value.trim()) {
+                    this.showNotification('Please enter some text first!', 'warning');
+                    this.textEditor.classList.add('shake');
+                    setTimeout(() => this.textEditor.classList.remove('shake'), 500);
+                    return;
+                }
+
+                this.isPlaying = true;
+                this.startTime = this.startTime || Date.now();
+                this.updateStatus('Playing', 'status-playing');
+                this.animate();
+            }
+
+            pause() {
+                this.isPlaying = false;
+                this.updateStatus('Paused', 'status-paused');
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+            }
+
+            reset() {
+                this.isPlaying = false;
+                this.currentPosition = 0;
+                this.currentWordIndex = 0;
+                this.startTime = null;
+                this.updateStatus('Ready', 'status-ready');
+                this.progressBar.style.width = '0%';
+                this.teleprompterText.style.transform = 'translateY(0px)';
+                this.updateTimer();
+                
+                if (this.wordHighlight) {
+                    document.querySelectorAll('.current-word').forEach(el => {
+                        el.classList.remove('current-word');
+                    });
+                }
+                
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+            }
+
+            animate() {
+                if (!this.isPlaying) return;
+
+                if (this.autoScroll) {
+                    this.currentPosition += this.speed * 0.5;
+                    this.teleprompterText.style.transform = `translateY(-${this.currentPosition}px)`;
+                }
+
+                // Word highlighting
+                if (this.wordHighlight && this.words.length > 0) {
+                    const wordsPerSecond = this.speed * 2;
+                    const elapsedSeconds = (Date.now() - this.startTime) / 1000;
+                    const targetWordIndex = Math.floor(elapsedSeconds * wordsPerSecond);
+                    
+                    if (targetWordIndex !== this.currentWordIndex && targetWordIndex < this.words.length) {
+                        document.querySelectorAll('.current-word').forEach(el => {
+                            el.classList.remove('current-word');
+                        });
+                        
+                        const currentWordEl = document.querySelector(`[data-index="${targetWordIndex}"]`);
+                        if (currentWordEl) {
+                            currentWordEl.classList.add('current-word');
+                        }
+                        
+                        this.currentWordIndex = targetWordIndex;
+                    }
+                }
+
+                // Calculate progress
+                const textHeight = this.teleprompterText.scrollHeight;
+                const containerHeight = this.teleprompterScreen.clientHeight;
+                const maxScroll = Math.max(textHeight - containerHeight + 200, 100);
+                const progress = Math.min((this.currentPosition / maxScroll) * 100, 100);
+                
+                this.progressBar.style.width = `${progress}%`;
+                this.updateTimer();
+
+                // Auto-stop when reaching the end
+                if (progress >= 100) {
+                    this.pause();
+                    this.updateStatus('Completed', 'status-playing');
+                    this.showNotification('Script completed!', 'success');
+                    return;
+                }
+
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+
+            updateStatus(text, className) {
+                this.statusBadge.textContent = text;
+                this.statusBadge.className = `status-badge ${className}`;
+            }
+
+            updateTimer() {
+                const elapsed = this.startTime ? Date.now() - this.startTime : 0;
+                const hours = Math.floor(elapsed / 3600000);
+                const minutes = Math.floor((elapsed % 3600000) / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                
+                this.timerDisplay.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            toggleFullscreen() {
+                if (!this.isFullscreen) {
+                    const elem = this.teleprompterContainer;
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                        elem.mozRequestFullScreen();
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+            }
+
+            handleFullscreenChange() {
+                this.isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || 
+                                     document.mozFullScreenElement || document.msFullscreenElement);
+                
+                if (this.isFullscreen) {
+                    this.teleprompterContainer.classList.add('fullscreen-mode');
+                    this.fullscreenBtn.innerHTML = '🔲 Exit Fullscreen';
+                } else {
+                    this.teleprompterContainer.classList.remove('fullscreen-mode');
+                    this.fullscreenBtn.innerHTML = '🔳 Fullscreen';
+                }
+            }
+
+            toggleMirror() {
+                this.isMirrored = !this.isMirrored;
+                
+                if (this.isMirrored) {
+                    this.teleprompterScreen.classList.add('mirrored');
+                    this.mirrorToggle.innerHTML = '🔄 Normal Mode';
+                } else {
+                    this.teleprompterScreen.classList.remove('mirrored');
+                    this.mirrorToggle.innerHTML = '🔄 Mirror Mode';
+                }
+                
+                this.saveSettings();
+            }
+
+            toggleWordHighlight() {
+                this.wordHighlight = !this.wordHighlight;
+                
+                if (this.wordHighlight) {
+                    this.wordHighlightToggle.innerHTML = '✨ Disable Highlight';
+                    this.wordHighlightToggle.classList.add('active');
+                } else {
+                    this.wordHighlightToggle.innerHTML = '✨ Word Highlight';
+                    this.wordHighlightToggle.classList.remove('active');
+                }
+                
+                this.updateTeleprompterText();
+                this.saveSettings();
+            }
+
+            toggleAutoScroll() {
+                this.autoScroll = !this.autoScroll;
+                
+                if (this.autoScroll) {
+                    this.autoScrollToggle.innerHTML = '🤖 Auto-Scroll ON';
+                    this.autoScrollToggle.classList.add('active');
+                } else {
+                    this.autoScrollToggle.innerHTML = '🤖 Auto-Scroll OFF';
+                    this.autoScrollToggle.classList.remove('active');
+                }
+                
+                this.saveSettings();
+            }
+
+            adjustSpeed(delta) {
+                const newSpeed = Math.max(0.5, Math.min(15, this.speed + delta));
+                this.speedControl.value = newSpeed;
+                this.updateSpeed(newSpeed);
+            }
+
+            saveScript() {
+                const script = this.textEditor.value;
+                const blob = new Blob([script], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'teleprompter-script.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+                this.showNotification('Script saved!', 'success');
+            }
+
+            loadScript() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.txt';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.textEditor.value = e.target.result;
+                            this.updateTeleprompterText();
+                            this.showNotification('Script loaded!', 'success');
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            }
+
+            saveSettings() {
+                const settings = {
+                    speed: this.speed,
+                    fontSize: this.fontSize,
+                    lineHeight: this.lineHeight,
+                    textColor: this.textColorControl.value,
+                    backgroundColor: this.backgroundColorControl.value,
+                    fontFamily: this.fontFamilySelect.value,
+                    language: this.languageSelect.value,
+                    isMirrored: this.isMirrored,
+                    wordHighlight: this.wordHighlight,
+                    autoScroll: this.autoScroll,
+                    noiseSuppressionEnabled: this.noiseSuppressionEnabled
+                };
+                localStorage.setItem('teleprompterSettings', JSON.stringify(settings));
+            }
+
+            loadSettings() {
+                const saved = localStorage.getItem('teleprompterSettings');
+                if (saved) {
+                    const settings = JSON.parse(saved);
+                    
+                    this.speedControl.value = settings.speed || 3;
+                    this.updateSpeed(settings.speed || 3);
+                    
+                    this.fontSizeControl.value = settings.fontSize || 32;
+                    this.updateFontSize(settings.fontSize || 32);
+                    
+                    this.lineHeightControl.value = settings.lineHeight || 1.8;
+                    this.updateLineHeight(settings.lineHeight || 1.8);
+                    
+                    this.textColorControl.value = settings.textColor || '#ffffff';
+                    this.updateTextColor(settings.textColor || '#ffffff');
+                    
+                    this.backgroundColorControl.value = settings.backgroundColor || '#000000';
+                    this.updateBackgroundColor(settings.backgroundColor || '#000000');
+                    
+                    this.fontFamilySelect.value = settings.fontFamily || 'Georgia, serif';
+                    this.updateFontFamily(settings.fontFamily || 'Georgia, serif');
+                    
+                    this.languageSelect.value = settings.language || 'en';
+                    
+                    if (settings.isMirrored) this.toggleMirror();
+                    if (settings.wordHighlight) this.toggleWordHighlight();
+                    if (settings.autoScroll === false) this.toggleAutoScroll();
+                    if (settings.noiseSuppressionEnabled) this.toggleNoiseSuppression();
+                }
+            }
+
+            async startRecording() {
+                try {
+                    this.recordingType = 'video';
+                    const quality = this.recordingQuality.value;
+                    const constraints = this.getVideoConstraints(quality);
+                    
+                    const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+                    await this.initializeRecording(stream, 'video/webm;codecs=vp9');
+                    
+                    this.showNotification('Video recording started!', 'success');
+                } catch (error) {
+                    console.error('Error starting video recording:', error);
+                    this.showNotification('Failed to start video recording. Please check permissions.', 'warning');
+                }
+            }
+
+            async startAudioRecording() {
+                try {
+                    this.recordingType = 'audio';
+                    const audioConstraints = this.getAudioConstraints();
+                    
+                    const stream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+                    
+                    if (this.noiseSuppressionEnabled) {
+                        const processedStream = await this.applyNoiseSuppression(stream);
+                        await this.initializeRecording(processedStream, 'audio/webm;codecs=opus');
+                    } else {
+                        await this.initializeRecording(stream, 'audio/webm;codecs=opus');
+                    }
+                    
+                    this.showNotification('Audio recording started!', 'success');
+                } catch (error) {
+                    console.error('Error starting audio recording:', error);
+                    this.showNotification('Failed to start audio recording. Please check microphone permissions.', 'warning');
+                }
+            }
+
+            getVideoConstraints(quality) {
+                const constraints = {
+                    video: {
+                        mediaSource: 'screen',
+                        frameRate: { ideal: 30, max: 60 }
+                    },
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: this.noiseSuppressionEnabled,
+                        autoGainControl: true,
+                        sampleRate: 48000,
+                        channelCount: 2
+                    }
+                };
+
+                switch (quality) {
+                    case '4k':
+                        constraints.video.width = { ideal: 3840 };
+                        constraints.video.height = { ideal: 2160 };
+                        break;
+                    case '1080p':
+                        constraints.video.width = { ideal: 1920 };
+                        constraints.video.height = { ideal: 1080 };
+                        break;
+                    case '720p':
+                        constraints.video.width = { ideal: 1280 };
+                        constraints.video.height = { ideal: 720 };
+                        break;
+                }
+
+                return constraints;
+            }
+
+            getAudioConstraints() {
+                const audioQuality = this.audioQuality.value;
+                const constraints = {
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: this.noiseSuppressionEnabled,
+                        autoGainControl: true
+                    }
+                };
+
+                switch (audioQuality) {
+                    case 'high':
+                        constraints.audio.sampleRate = 48000;
+                        constraints.audio.channelCount = 2;
+                        break;
+                    case 'medium':
+                        constraints.audio.sampleRate = 44100;
+                        constraints.audio.channelCount = 2;
+                        break;
+                    case 'low':
+                        constraints.audio.sampleRate = 22050;
+                        constraints.audio.channelCount = 1;
+                        break;
+                }
+
+                return constraints;
+            }
+
+            async applyNoiseSuppression(stream) {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = this.audioContext.createMediaStreamSource(stream);
+                    
+                    // Create noise gate
+                    this.noiseGate = this.audioContext.createDynamicsCompressor();
+                    this.noiseGate.threshold.setValueAtTime(-50, this.audioContext.currentTime);
+                    this.noiseGate.knee.setValueAtTime(40, this.audioContext.currentTime);
+                    this.noiseGate.ratio.setValueAtTime(12, this.audioContext.currentTime);
+                    this.noiseGate.attack.setValueAtTime(0.003, this.audioContext.currentTime);
+                    this.noiseGate.release.setValueAtTime(0.25, this.audioContext.currentTime);
+
+                    // Create analyser for noise level monitoring
+                    this.analyser = this.audioContext.createAnalyser();
+                    this.analyser.fftSize = 256;
+
+                    // Connect audio processing chain
+                    source.connect(this.noiseGate);
+                    this.noiseGate.connect(this.analyser);
+                    
+                    const destination = this.audioContext.createMediaStreamDestination();
+                    this.analyser.connect(destination);
+
+                    // Start noise level monitoring
+                    this.startNoiseLevelMonitoring();
+
+                    return destination.stream;
+                } catch (error) {
+                    console.error('Error applying noise suppression:', error);
+                    return stream; // Fallback to original stream
+                }
+            }
+
+            startNoiseLevelMonitoring() {
+                if (!this.analyser) return;
+
+                const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+                
+                const updateNoiseLevel = () => {
+                    if (!this.isRecording) return;
+                    
+                    this.analyser.getByteFrequencyData(dataArray);
+                    const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+                    const noiseLevel = Math.min((average / 255) * 100, 100);
+                    
+                    this.noiseLevelBar.style.width = `${noiseLevel}%`;
+                    
+                    requestAnimationFrame(updateNoiseLevel);
+                };
+                
+                updateNoiseLevel();
+            }
+
+            async initializeRecording(stream, mimeType) {
+                this.recordedChunks = [];
+                
+                const options = {
+                    mimeType: mimeType,
+                    videoBitsPerSecond: this.recordingType === 'video' ? this.getVideoBitrate() : undefined,
+                    audioBitsPerSecond: this.getAudioBitrate()
+                };
+
+                this.mediaRecorder = new MediaRecorder(stream, options);
+                
+                this.mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        this.recordedChunks.push(event.data);
+                        this.updateRecordingSize();
+                    }
+                };
+
+                this.mediaRecorder.onstop = () => {
+                    this.processRecording();
+                };
+
+                this.mediaRecorder.start(1000); // Collect data every second
+                this.isRecording = true;
+                this.recordingStartTime = Date.now();
+                
+                this.updateRecordingUI();
+                this.startRecordingTimer();
+            }
+
+            getVideoBitrate() {
+                const quality = this.recordingQuality.value;
+                switch (quality) {
+                    case '4k': return 20000000; // 20 Mbps for 4K
+                    case '1080p': return 8000000; // 8 Mbps for 1080p
+                    case '720p': return 4000000; // 4 Mbps for 720p
+                    default: return 8000000;
+                }
+            }
+
+            getAudioBitrate() {
+                const quality = this.audioQuality.value;
+                switch (quality) {
+                    case 'high': return 320000; // 320 kbps
+                    case 'medium': return 192000; // 192 kbps
+                    case 'low': return 128000; // 128 kbps
+                    default: return 192000;
+                }
+            }
+
+            stopRecording() {
+                if (!this.mediaRecorder || !this.isRecording) return;
+
+                this.mediaRecorder.stop();
+                this.isRecording = false;
+                
+                // Stop all tracks
+                if (this.mediaRecorder.stream) {
+                    this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                }
+
+                // Clean up audio context
+                if (this.audioContext) {
+                    this.audioContext.close();
+                    this.audioContext = null;
+                }
+
+                this.updateRecordingUI();
+                this.showNotification('Recording stopped! Processing...', 'success');
+            }
+
+            processRecording() {
+                if (this.recordedChunks.length === 0) return;
+
+                const blob = new Blob(this.recordedChunks, {
+                    type: this.recordingType === 'video' ? 'video/webm' : 'audio/webm'
+                });
+
+                this.createDownloadLink(blob);
+                this.createPreview(blob);
+                
+                this.recordingIndicator.classList.remove('recording');
+                this.recordingIndicator.classList.add('processing');
+                
+                setTimeout(() => {
+                    this.recordingIndicator.classList.remove('processing');
+                    this.showNotification('Recording ready for download!', 'success');
+                }, 1000);
+            }
+
+            createDownloadLink(blob) {
+                const url = URL.createObjectURL(blob);
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const filename = `${this.recordingType}-recording-${timestamp}.webm`;
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = filename;
+                downloadLink.className = 'download-link';
+                downloadLink.textContent = `📥 Download ${this.recordingType.toUpperCase()} (${this.formatFileSize(blob.size)})`;
+                
+                this.downloadContainer.innerHTML = '';
+                this.downloadContainer.appendChild(downloadLink);
+            }
+
+            createPreview(blob) {
+                const url = URL.createObjectURL(blob);
+                this.recordingPreview.innerHTML = '';
+                
+                if (this.recordingType === 'video') {
+                    const video = document.createElement('video');
+                    video.src = url;
+                    video.controls = true;
+                    video.style.maxHeight = '200px';
+                    this.recordingPreview.appendChild(video);
+                } else {
+                    const audio = document.createElement('audio');
+                    audio.src = url;
+                    audio.controls = true;
+                    this.recordingPreview.appendChild(audio);
+                }
+                
+                this.recordingPreview.style.display = 'block';
+            }
+
+            updateRecordingUI() {
+                if (this.isRecording) {
+                    this.startRecordingBtn.disabled = true;
+                    this.stopRecordingBtn.disabled = false;
+                    this.audioOnlyBtn.disabled = true;
+                    this.recordingIndicator.classList.add('recording');
+                    
+                    if (this.noiseSuppressionEnabled && this.recordingType === 'audio') {
+                        this.noiseIndicator.style.display = 'flex';
+                    }
+                } else {
+                    this.startRecordingBtn.disabled = false;
+                    this.stopRecordingBtn.disabled = true;
+                    this.audioOnlyBtn.disabled = false;
+                    this.recordingIndicator.classList.remove('recording');
+                    this.noiseIndicator.style.display = 'none';
+                }
+            }
+
+            startRecordingTimer() {
+                const updateTimer = () => {
+                    if (!this.isRecording) return;
+                    
+                    const elapsed = Date.now() - this.recordingStartTime;
+                    const minutes = Math.floor(elapsed / 60000);
+                    const seconds = Math.floor((elapsed % 60000) / 1000);
+                    
+                    this.recordingTime.textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    setTimeout(updateTimer, 1000);
+                };
+                
+                updateTimer();
+            }
+
+            updateRecordingSize() {
+                const totalSize = this.recordedChunks.reduce((total, chunk) => total + chunk.size, 0);
+                this.recordingSize.textContent = this.formatFileSize(totalSize);
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 MB';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+
+            toggleNoiseSuppression() {
+                this.noiseSuppressionEnabled = !this.noiseSuppressionEnabled;
+                
+                if (this.noiseSuppressionEnabled) {
+                    this.noiseSuppressionToggle.innerHTML = '🔇 Noise Suppression ON';
+                    this.noiseSuppressionToggle.classList.add('active');
+                } else {
+                    this.noiseSuppressionToggle.innerHTML = '🔇 Noise Suppression';
+                    this.noiseSuppressionToggle.classList.remove('active');
+                }
+                
+                this.saveSettings();
+            }
+
+            showNotification(message, type) {
+                // Create a simple notification system
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease-out;
+                `;
+                
+                switch(type) {
+                    case 'success':
+                        notification.style.background = 'linear-gradient(135deg, #4facfe, #00f2fe)';
+                        break;
+                    case 'warning':
+                        notification.style.background = 'linear-gradient(135deg, #ffecd2, #fcb69f)';
+                        notification.style.color = '#8b4513';
+                        break;
+                    default:
+                        notification.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                }
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-in forwards';
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 3000);
+            }
+        }
+
+        // Add CSS animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize the teleprompter when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ProfessionalTeleprompter();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9862d282e12e93d3',t:'MTc1OTA1ODEyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
