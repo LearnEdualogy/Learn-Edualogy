@@ -1,77 +1,125 @@
 <style>
 .quiz-container{
-  max-width:600px;
-  margin:20px auto;
+  max-width:650px;
+  margin:30px auto;
   background:#455a64;
-  padding:20px;
-  border-radius:10px;
+  padding:30px;
+  border-radius:25px;
   color:#fff;
   text-align:center;
   font-family:'Noto Sans Kannada',sans-serif;
 }
-.question{font-size:18px;font-weight:bold;margin-bottom:10px;color:orange;}
+
+/* Start Section */
+.start-box{
+  background:#2f3f46;
+  padding:35px 25px;
+  border-radius:20px;
+  line-height:1.8;
+}
+
+.start-box h3{
+  font-size:28px;
+  margin-bottom:25px;
+}
+
+.start-box ul{
+  list-style:none;
+  padding:0;
+  margin:0 0 30px 0;
+}
+
+.start-box li{
+  margin-bottom:14px;
+  font-size:18px;
+}
+
+.start-box button{
+  background:linear-gradient(45deg,#2196f3,#1e88e5);
+  padding:14px 32px;
+  font-size:18px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+  color:white;
+}
+
+.start-box button:hover{
+  transform:scale(1.05);
+}
+
+/* Quiz Section */
+.question{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:15px;
+  color:orange;
+}
+
 .answers label{
   display:block;
   background:#90a4ae;
-  padding:10px;
-  margin:8px 0;
-  border-radius:6px;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
   cursor:pointer;
   font-weight:bold;
   color:#222;
 }
+
+.answers label:hover{
+  opacity:0.9;
+}
+
 .correct{background:#4caf50!important;color:#fff;}
 .wrong{background:#f44336!important;color:#fff;}
+
 .explanation{
-  margin-top:10px;
-  padding:10px;
+  margin-top:15px;
+  padding:12px;
   background:#263238;
-  border-radius:6px;
-  font-size:14px;
+  border-radius:8px;
+  font-size:15px;
 }
+
+.timer{
+  margin-bottom:10px;
+  font-size:16px;
+}
+
 button{
-  padding:8px 15px;
+  padding:10px 18px;
   border:none;
   background:#2196f3;
   color:#fff;
-  border-radius:5px;
-  cursor:pointer;
-  margin-top:10px;
-}
-.start-box{
-  margin-bottom:20px;
-  background:#37474f;
-  padding:15px;
   border-radius:8px;
+  cursor:pointer;
+  margin-top:15px;
 }
 </style>
 
 <div class="quiz-container">
 
-  <!-- Start Explanation Section -->
 <div id="startSection" class="start-box">
-  <h3 style="text-align:center;">ಕ್ವಿಜ್ ಸೂಚನೆಗಳು</h3>
-
-  <p style="text-align:center;">
-    1️⃣ ಪ್ರತಿಯೊಂದು ಪ್ರಶ್ನೆಗೆ 30 ಸೆಕೆಂಡು ಸಮಯ ಇದೆ.<br>
-    2️⃣ ಸರಿಯಾದ ಉತ್ತರ ಆಯ್ಕೆ ಮಾಡಿದರೆ ಅಂಕ ಸಿಗುತ್ತದೆ.<br>
-    3️⃣ ಪ್ರತಿಯೊಂದು ಪ್ರಶ್ನೆಯ ನಂತರ ವಿವರಣೆ ತೋರಿಸಲಾಗುತ್ತದೆ.<br>
-    4️⃣ ಎಲ್ಲಾ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿದ ನಂತರ ನಿಮ್ಮ ಫಲಿತಾಂಶ ಕಾಣುತ್ತದೆ.
-  </p>
-
-  <div style="text-align:center;">
-    <button onclick="startQuiz()">Start Quiz</button>
-  </div>
-
+  <h3>ಕ್ವಿಜ್ ಸೂಚನೆಗಳು</h3>
+  <ul>
+    <li>1️⃣ ಪ್ರತಿಯೊಂದು ಪ್ರಶ್ನೆಗೆ 30 ಸೆಕೆಂಡು ಸಮಯ ಇದೆ.</li>
+    <li>2️⃣ ಸರಿಯಾದ ಉತ್ತರ ಆಯ್ಕೆ ಮಾಡಿದರೆ ಅಂಕ ಸಿಗುತ್ತದೆ.</li>
+    <li>3️⃣ ಪ್ರತಿಯೊಂದು ಪ್ರಶ್ನೆಯ ನಂತರ ವಿವರಣೆ ತೋರಿಸಲಾಗುತ್ತದೆ.</li>
+    <li>4️⃣ ಎಲ್ಲಾ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿದ ನಂತರ ನಿಮ್ಮ ಫಲಿತಾಂಶ ಕಾಣುತ್ತದೆ.</li>
+  </ul>
+  <button onclick="startQuiz()">Start Quiz</button>
 </div>
 
-  <div id="quiz" style="display:none;"></div>
-  <div id="result"></div>
-  <button id="nextBtn" onclick="nextQuestion()" style="display:none;">ಮುಂದೆ</button>
-  <button id="restartBtn" onclick="restartQuiz()" style="display:none;">ಮರುಪ್ರಾರಂಭಿಸಿ</button>
+<div id="quiz" style="display:none;"></div>
+<div id="result"></div>
+<button id="nextBtn" onclick="nextQuestion()" style="display:none;">ಮುಂದೆ</button>
+<button id="restartBtn" onclick="restartQuiz()" style="display:none;">ಮರುಪ್ರಾರಂಭಿಸಿ</button>
 
-  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
-  <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+<audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+
 </div>
 
 <script>
@@ -169,7 +217,7 @@ document.getElementById("nextBtn").style.display="none";
 const q=questions[currentQuestion];
 document.getElementById("quiz").innerHTML=`
 <div class="question">${currentQuestion+1}. ${q.question}</div>
-<div id="timer">⏳ 30</div>
+<div class="timer">⏳ <span id="time">30</span> ಸೆಕೆಂಡು</div>
 <div class="answers">
 ${q.answers.map((a,i)=>
 `<label onclick="selectAnswer(${i})" id="opt${i}">${a}</label>`
@@ -215,10 +263,10 @@ showResult();
 
 function countdown(sec){
 let time=sec;
-const t=document.getElementById("timer");
+const t=document.getElementById("time");
 timer=setInterval(()=>{
 time--;
-t.innerHTML="⏳ "+time;
+t.innerHTML=time;
 if(time<=0){
 clearInterval(timer);
 selectAnswer(-1);
@@ -230,7 +278,8 @@ function showResult(){
 document.getElementById("quiz").innerHTML="";
 document.getElementById("nextBtn").style.display="none";
 document.getElementById("result").innerHTML=
-`<p>ಸರಿಯಾದ ಉತ್ತರಗಳು: ${correctAnswers}</p>
+`<h3>ಫಲಿತಾಂಶ</h3>
+<p>ಸರಿಯಾದ ಉತ್ತರಗಳು: ${correctAnswers}</p>
 <p>ತಪ್ಪಾದ ಉತ್ತರಗಳು: ${wrongAnswers}</p>
 <p>ಒಟ್ಟು ಅಂಕಗಳು: ${correctAnswers}/${questions.length}</p>`;
 document.getElementById("restartBtn").style.display="inline-block";
