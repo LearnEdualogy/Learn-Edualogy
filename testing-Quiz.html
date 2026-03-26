@@ -1,0 +1,241 @@
+<style>
+.quiz-container{
+  max-width:600px;
+  margin:20px auto;
+  background:#455a64;
+  padding:20px;
+  border-radius:10px;
+  color:#fff;
+  text-align:center;
+  font-family:'Noto Sans Kannada',sans-serif;
+}
+.question{font-size:18px;font-weight:bold;margin-bottom:10px;color:orange;}
+.answers label{
+  display:block;
+  background:#90a4ae;
+  padding:10px;
+  margin:8px 0;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+  color:#222;
+}
+.correct{background:#4caf50!important;color:#fff;}
+.wrong{background:#f44336!important;color:#fff;}
+.explanation{
+  margin-top:10px;
+  padding:10px;
+  background:#263238;
+  border-radius:6px;
+  font-size:14px;
+}
+button{
+  padding:8px 15px;
+  border:none;
+  background:#2196f3;
+  color:#fff;
+  border-radius:5px;
+  cursor:pointer;
+  margin-top:10px;
+}
+.start-box{
+  margin-bottom:20px;
+  background:#37474f;
+  padding:15px;
+  border-radius:8px;
+}
+</style>
+
+<div class="quiz-container">
+
+  <!-- Start Explanation Section -->
+  <div id="startSection" class="start-box">
+    <h3>ಕ್ವಿಜ್ ಸೂಚನೆಗಳು</h3>
+    <p style="text-align:left;">1️⃣ ಪ್ರತಿಯೊಂದು ಪ್ರಶ್ನೆಗೆ 30 ಸೆಕೆಂಡು ಸಮಯ ಇದೆ.<br>
+       2️⃣ ಸರಿಯಾದ ಉತ್ತರ ಆಯ್ಕೆ ಮಾಡಿದರೆ ಅಂಕ ಸಿಗುತ್ತದೆ.<br>
+       3️⃣ ಪ್ರತಿಯೊಂದು ಪ್ರಶ್ನೆಯ ನಂತರ ವಿವರಣೆ ತೋರಿಸಲಾಗುತ್ತದೆ.<br>
+       4️⃣ ಎಲ್ಲಾ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿದ ನಂತರ ನಿಮ್ಮ ಫಲಿತಾಂಶ ಕಾಣುತ್ತದೆ.</p>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <div id="quiz" style="display:none;"></div>
+  <div id="result"></div>
+  <button id="nextBtn" onclick="nextQuestion()" style="display:none;">ಮುಂದೆ</button>
+  <button id="restartBtn" onclick="restartQuiz()" style="display:none;">ಮರುಪ್ರಾರಂಭಿಸಿ</button>
+
+  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+</div>
+
+<script>
+const questions=[
+{
+question:"ಭಾರತದ ಸಂವಿಧಾನದ ಪ್ರಸ್ತಾವನೆಯಲ್ಲಿರುವ ‘ಸರ್ವಭೌಮ’ ಎಂಬ ಪದದ ಅರ್ಥವೇನು?",
+answers:["ಧಾರ್ಮಿಕ ಸ್ವಾತಂತ್ರ್ಯ","ಸ್ವತಂತ್ರ ಆಡಳಿತಾಧಿಕಾರ","ಸಮಾನತೆ","ನ್ಯಾಯ"],
+correct:1,
+explanation:"‘ಸರ್ವಭೌಮ’ ಎಂದರೆ ದೇಶವು ತನ್ನ ಆಡಳಿತಾಧಿಕಾರದಲ್ಲಿ ಸಂಪೂರ್ಣ ಸ್ವತಂತ್ರವಾಗಿದೆ ಎಂಬರ್ಥ."
+},
+{
+question:"ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿ ಯಾವುದು?",
+answers:["ತುಂಗಭದ್ರಾ","ಕಾವೇರಿ","ಕೃಷ್ಣಾ","ಶರಾವತಿ"],
+correct:2,
+explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+},
+{
+       
+        question: "ಭಾರತದ ಮೊದಲ ಮಹಿಳಾ ರಾಜ್ಯಪಾಲರು ಯಾರು?",
+        answers: ["ವಿಜಯಲಕ್ಷ್ಮಿ ಪಂಡಿತ್", "ಸರೋಜಿನಿ ನಾಯ್ಡು", "ಪ್ರತಿಭಾ ಪಾಟೀಲ್", "ಇಂದಿರಾ ಗಾಂಧಿ"],
+        correct: 1,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+      },
+      {
+       
+        question: "ಭಾರತದಲ್ಲಿ ಹಸಿರು ಕ್ರಾಂತಿಯ ಪಿತಾಮಹ ಯಾರು?",
+        answers: ["ಎಂ.ಎಸ್.ಸ್ವಾಮಿನಾಥನ್", "ವರ್ಗೀಸ್ ಕುರಿಯನ್", "ಧೀರೂಭಾಯಿ ಅಂಬಾನಿ", "ಸಿ.ವಿ.ರಾಮನ್"],
+        correct: 0,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+      },
+      {
+       
+        question: "ಜನ ಗಣ ಮನ ಯಾವ ಭಾಷೆಯಲ್ಲಿ ರಚಿಸಲಾಗಿದೆ?",
+        answers: ["ಹಿಂದಿ", "ಸಂಸ್ಕೃತ", "ಬೆಂಗಾಲಿ", "ಉರ್ದು"],
+        correct: 2,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+      },
+      {
+       
+        question: "'ಸಂಸ್ಕಾರ' ಮತ್ತು 'ಅವಸ್ಥೆ' ಎಂಬ ಪ್ರಸಿದ್ಧ ಕಾದಂಬರಿಗಳನ್ನು ಬರೆದವರು ಯಾರು?",
+        answers: ["ಎಸ್.ಎಲ್. ಭೈರಪ್ಪ", "ಯು.ಆರ್. ಅನಂತಮೂರ್ತಿ", "ಪಿ. ಲಂಕೇಶ್", "ಚಂದ್ರಶೇಖರ ಕಂಬಾರ"],
+        correct: 1,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+      },
+      {
+       
+        question: "ಕನ್ನಡದ ಆಸ್ತಿ ಎಂದು ಯಾರನ್ನು ಕರೆಯಲಾಗುತ್ತದೆ?",
+        answers: ["ಬಿ.ಎಂ. ಶ್ರೀಕಂಠಯ್ಯ", "ಕುವೆಂಪು", "ಮಾಸ್ತಿ ವೆಂಕಟೇಶ ಅಯ್ಯಂಗಾರ್", "ಆಲೂರು ವೆಂಕಟರಾವ್"],
+        correct: 2,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ." 
+      },
+      {
+       
+        question: "ಕನ್ನಡ ಭಾಷೆಗೆ ಕೇಂದ್ರ ಸರ್ಕಾರವು ಶಾಸ್ತ್ರೀಯ ಭಾಷೆ ಸ್ಥಾನಮಾನ ನೀಡಿದ ವರ್ಷ?",
+        answers: ["2005", "2006", "2008", "2010"],
+        correct: 2,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+      },
+      {
+       
+        question: "ಜ್ಞಾನಪೀಠ ಪ್ರಶಸ್ತಿ ವಿಜೇತ ಮೂಕಜ್ಜಿಯ ಕನಸುಗಳು ಕಾದಂಬರಿಯ ಲೇಖಕರು ಯಾರು?",
+        answers: ["ಗಿರೀಶ್ ಕಾರ್ನಾಡ್", "ಶಿವರಾಮ ಕಾರಂತ", "ವಿನಾಯಕ ಕೃಷ್ಣ ಗೋಕಾಕ್", "ಮಾಸ್ತಿ ವೆಂಕಟೇಶ ಅಯ್ಯಂಗಾರ್"],
+        correct: 1,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+      },
+      {
+       
+        question: "12ನೇ ಶತಮಾನದ ವಚನ ಸಾಹಿತ್ಯ ಚಳುವಳಿಯ ನೇತೃತ್ವ ವಹಿಸಿದ್ದವರು ಯಾರು?",
+        answers: ["ಕುಮಾರವ್ಯಾಸ", "ಬಸವಣ್ಣ", "ಪಂಪ", "ರನ್ನ"],
+        correct: 1,
+        explanation:"ಕೃಷ್ಣಾ ನದಿ ಕರ್ನಾಟಕದ ಅತಿ ಉದ್ದದ ನದಿಯಾಗಿದ್ದು ರಾಜ್ಯದ ಅನೇಕ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಹರಿಯುತ್ತದೆ."
+      }
+];
+
+let currentQuestion=0;
+let correctAnswers=0;
+let wrongAnswers=0;
+let timer;
+
+function playSound(id){
+const s=document.getElementById(id);
+s.currentTime=0;
+s.play().catch(()=>{});
+}
+
+function startQuiz(){
+document.getElementById("startSection").style.display="none";
+document.getElementById("quiz").style.display="block";
+showQuestion();
+}
+
+function showQuestion(){
+clearInterval(timer);
+document.getElementById("nextBtn").style.display="none";
+const q=questions[currentQuestion];
+document.getElementById("quiz").innerHTML=`
+<div class="question">${currentQuestion+1}. ${q.question}</div>
+<div id="timer">⏳ 30</div>
+<div class="answers">
+${q.answers.map((a,i)=>
+`<label onclick="selectAnswer(${i})" id="opt${i}">${a}</label>`
+).join("")}
+</div>
+<div id="explanationBox"></div>`;
+countdown(30);
+}
+
+function selectAnswer(selected){
+clearInterval(timer);
+const q=questions[currentQuestion];
+
+q.answers.forEach((_,i)=>{
+const el=document.getElementById("opt"+i);
+el.onclick=null;
+if(i===q.correct) el.classList.add("correct");
+else if(i===selected) el.classList.add("wrong");
+});
+
+if(selected===q.correct){
+correctAnswers++;
+playSound("correctSound");
+}else{
+wrongAnswers++;
+playSound("wrongSound");
+}
+
+document.getElementById("explanationBox").innerHTML=
+`<div class="explanation">✔ ವಿವರಣೆ: ${q.explanation}</div>`;
+
+document.getElementById("nextBtn").style.display="inline-block";
+}
+
+function nextQuestion(){
+currentQuestion++;
+if(currentQuestion<questions.length){
+showQuestion();
+}else{
+showResult();
+}
+}
+
+function countdown(sec){
+let time=sec;
+const t=document.getElementById("timer");
+timer=setInterval(()=>{
+time--;
+t.innerHTML="⏳ "+time;
+if(time<=0){
+clearInterval(timer);
+selectAnswer(-1);
+}
+},1000);
+}
+
+function showResult(){
+document.getElementById("quiz").innerHTML="";
+document.getElementById("nextBtn").style.display="none";
+document.getElementById("result").innerHTML=
+`<p>ಸರಿಯಾದ ಉತ್ತರಗಳು: ${correctAnswers}</p>
+<p>ತಪ್ಪಾದ ಉತ್ತರಗಳು: ${wrongAnswers}</p>
+<p>ಒಟ್ಟು ಅಂಕಗಳು: ${correctAnswers}/${questions.length}</p>`;
+document.getElementById("restartBtn").style.display="inline-block";
+}
+
+function restartQuiz(){
+currentQuestion=0;
+correctAnswers=0;
+wrongAnswers=0;
+document.getElementById("result").innerHTML="";
+document.getElementById("restartBtn").style.display="none";
+document.getElementById("startSection").style.display="block";
+document.getElementById("quiz").style.display="none";
+}
+</script>
