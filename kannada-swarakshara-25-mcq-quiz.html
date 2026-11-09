@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ಕನ್ನಡ ಸ್ವರಾಕ್ಷರಗಳು – 25 MCQ ಕ್ವಿಜ್</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: "Noto Sans Kannada", "Noto Sans", sans-serif;
+    background: #EAF2FA;
+    color: #1A1A1A;
+  }
+
+  .container {
+    max-width: 650px;
+    margin: auto;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 4px solid #1F3A5F;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .cover-icon {
+    text-align: center;
+    font-size: 55px;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    color: #1F3A5F;
+    text-align: center;
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #444444;
+    font-size: 17px;
+    margin: 10px 0 20px;
+  }
+
+  .info-box {
+    background: #FFF6DC;
+    border: 3px solid #FFC93C;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .info-box p {
+    margin: 6px 0;
+    font-size: 16px;
+  }
+
+  .info-box strong {
+    color: #1F3A5F;
+  }
+
+  .start-button {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #1F3A5F;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .start-button:hover {
+    background: #2E8B57;
+    transform: translateY(-3px);
+  }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #1F3A5F;
+  }
+
+  .timer {
+    background: #FFC93C;
+    color: #1F3A5F;
+    padding: 6px 14px;
+    border-radius: 20px;
+  }
+
+  .progress-bar {
+    height: 12px;
+    background: #D9E4F1;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #2E8B57;
+    transition: width 0.3s ease;
+  }
+
+  .question {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .option {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    font-size: 18px;
+    text-align: left;
+    color: #1A1A1A;
+    background: #F5F9FF;
+    border: 2px solid #1F3A5F;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .option:hover:not(:disabled) {
+    background: #FFC93C;
+  }
+
+  .option:disabled {
+    cursor: not-allowed;
+  }
+
+  .correct {
+    background: #EAF7EF !important;
+    border-color: #2E8B57 !important;
+  }
+
+  .wrong {
+    background: #FDECEA !important;
+    border-color: #C0392B !important;
+  }
+
+  .feedback {
+    min-height: 30px;
+    margin: 15px 0;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .feedback.correct {
+    color: #2E8B57;
+  }
+
+  .feedback.wrong {
+    color: #C0392B;
+  }
+
+  .next-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #1F3A5F;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .result-score {
+    font-size: 30px;
+    font-weight: bold;
+    color: #1F3A5F;
+    text-align: center;
+  }
+
+  .result-message {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .review-list {
+    padding: 0;
+    list-style: none;
+  }
+
+  .review-list li {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: #EAF2FA;
+  }
+
+  .review-correct {
+    border-left: 6px solid #2E8B57;
+  }
+
+  .review-wrong {
+    border-left: 6px solid #C0392B;
+  }
+
+  .home-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1F3A5F;
+    background: #E5E7EB;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @media (max-width: 500px) {
+    .card {
+      padding: 18px;
+    }
+
+    h1 {
+      font-size: 23px;
+    }
+
+    .question {
+      font-size: 18px;
+    }
+
+    .option {
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+
+    <!-- ಮುಖಪುಟ -->
+    <section id="coverScreen">
+      <div class="cover-icon">🔤</div>
+
+      <h1>ಕನ್ನಡ ಸ್ವರಾಕ್ಷರಗಳು: ಅ–ಔ</h1>
+
+      <p class="subtitle">25 MCQ ಪ್ರಶ್ನೋತ್ತರಗಳು</p>
+
+      <div class="info-box">
+        <p><strong>ವಿಷಯ:</strong> ಕನ್ನಡ ಸ್ವರಾಕ್ಷರಗಳು</p>
+        <p><strong>ತರಗತಿ:</strong> 1ನೇ ತರಗತಿ</p>
+        <p><strong>ಒಟ್ಟು ಪ್ರಶ್ನೆಗಳು:</strong> 25</p>
+        <p><strong>ಪ್ರತಿ ಪ್ರಶ್ನೆಗೆ:</strong> 1 ಅಂಕ</p>
+        <p><strong>ಸಮಯ:</strong> ಪ್ರತಿ ಪ್ರಶ್ನೆಗೆ 30 ಸೆಕೆಂಡುಗಳು</p>
+      </div>
+
+      <button class="start-button" onclick="startQuiz()">
+        ಕ್ವಿಜ್ ಪ್ರಾರಂಭಿಸಿ
+      </button>
+    </section>
+
+    <!-- ಕ್ವಿಜ್ ಪುಟ -->
+    <section id="quizScreen" class="hidden">
+      <div class="quiz-header">
+        <span>ಕನ್ನಡ ಸ್ವರಾಕ್ಷರಗಳು</span>
+        <span class="timer" id="timer">30</span>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="question" id="questionText"></div>
+      <div id="optionsBox"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <button class="next-button hidden" id="nextButton">
+        ಮುಂದಿನ ಪ್ರಶ್ನೆ
+      </button>
+    </section>
+
+    <!-- ಫಲಿತಾಂಶ ಪುಟ -->
+    <section id="resultScreen" class="hidden">
+      <h1>ಕ್ವಿಜ್ ಮುಗಿಯಿತು!</h1>
+
+      <p class="result-score" id="finalScore"></p>
+      <p class="result-message" id="resultMessage"></p>
+
+      <h2 style="color:#1F3A5F;">ನಿಮ್ಮ ಉತ್ತರಗಳು</h2>
+      <ul class="review-list" id="reviewList"></ul>
+
+      <button class="home-button" onclick="goHome()">
+        ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ
+      </button>
+    </section>
+
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "ಕನ್ನಡ ವರ್ಣಮಾಲೆಯ ಮೊದಲ ಸ್ವರಾಕ್ಷರ ಯಾವುದು?",
+    options: ["ಆ", "ಅ", "ಇ"],
+    answer: 1,
+    explanation: "‘ಅ’ ಕನ್ನಡ ವರ್ಣಮಾಲೆಯ ಮೊದಲ ಸ್ವರಾಕ್ಷರ."
+  },
+  {
+    question: "‘ಆ’ ಯಾವ ಬಗೆಯ ಅಕ್ಷರ?",
+    options: ["ವ್ಯಂಜನ", "ಸ್ವರ", "ಸಂಖ್ಯೆ"],
+    answer: 1,
+    explanation: "‘ಆ’ ಒಂದು ಸ್ವರಾಕ್ಷರ."
+  },
+  {
+    question: "‘ಇ’ ಯ ನಂತರ ಬರುವ ಸ್ವರಾಕ್ಷರ ಯಾವುದು?",
+    options: ["ಈ", "ಉ", "ಎ"],
+    answer: 0,
+    explanation: "‘ಇ’ ಯ ನಂತರ ‘ಈ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "‘ಉ’ ಮತ್ತು ‘ಊ’ ಯಾವ ಬಗೆಯ ಅಕ್ಷರಗಳು?",
+    options: ["ಸ್ವರಗಳು", "ವ್ಯಂಜನಗಳು", "ಸಂಖ್ಯೆಗಳು"],
+    answer: 0,
+    explanation: "‘ಉ’ ಮತ್ತು ‘ಊ’ ಸ್ವರಾಕ್ಷರಗಳು."
+  },
+  {
+    question: "‘ಎ’ ಯ ನಂತರ ಬರುವ ಸ್ವರಾಕ್ಷರ ಯಾವುದು?",
+    options: ["ಐ", "ಏ", "ಒ"],
+    answer: 1,
+    explanation: "‘ಎ’ ಯ ನಂತರ ‘ಏ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "‘ಒ’ ಯ ನಂತರ ಬರುವ ಸ್ವರಾಕ್ಷರ ಯಾವುದು?",
+    options: ["ಓ", "ಔ", "ಅಂ"],
+    answer: 0,
+    explanation: "‘ಒ’ ಯ ನಂತರ ‘ಓ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "ಕನ್ನಡ ಸ್ವರಾಕ್ಷರಗಳ ಸರಿಯಾದ ಕ್ರಮ ಯಾವುದು?",
+    options: [
+      "ಅ, ಆ, ಇ, ಈ",
+      "ಆ, ಅ, ಈ, ಇ",
+      "ಇ, ಈ, ಅ, ಆ"
+    ],
+    answer: 0,
+    explanation: "ಸರಿಯಾದ ಕ್ರಮ: ಅ, ಆ, ಇ, ಈ."
+  },
+  {
+    question: "‘ಅ’ ಮತ್ತು ‘ಆ’ ಗಳಲ್ಲಿ ಯಾವುದು ದೀರ್ಘ ಸ್ವರ?",
+    options: ["ಅ", "ಆ", "ಎರಡೂ ಹ್ರಸ್ವ"],
+    answer: 1,
+    explanation: "‘ಆ’ ದೀರ್ಘ ಸ್ವರ."
+  },
+  {
+    question: "‘ಇ’ ಮತ್ತು ‘ಈ’ ಗಳಲ್ಲಿ ಯಾವುದು ಹ್ರಸ್ವ ಸ್ವರ?",
+    options: ["ಇ", "ಈ", "ಎರಡೂ ದೀರ್ಘ"],
+    answer: 0,
+    explanation: "‘ಇ’ ಹ್ರಸ್ವ ಸ್ವರ."
+  },
+  {
+    question: "‘ಉ’ ಮತ್ತು ‘ಊ’ ಗಳಲ್ಲಿ ಯಾವುದು ದೀರ್ಘ ಸ್ವರ?",
+    options: ["ಉ", "ಊ", "ಎರಡೂ ಹ್ರಸ್ವ"],
+    answer: 1,
+    explanation: "‘ಊ’ ದೀರ್ಘ ಸ್ವರ."
+  },
+  {
+    question: "‘ಎ’ ಮತ್ತು ‘ಏ’ ಗಳಲ್ಲಿ ಯಾವುದು ಹ್ರಸ್ವ ಸ್ವರ?",
+    options: ["ಎ", "ಏ", "ಎರಡೂ ದೀರ್ಘ"],
+    answer: 0,
+    explanation: "‘ಎ’ ಹ್ರಸ್ವ ಸ್ವರ."
+  },
+  {
+    question: "‘ಐ’ ಯಾವ ಬಗೆಯ ಸ್ವರ?",
+    options: ["ಸಂಯುಕ್ತ ಸ್ವರ", "ವ್ಯಂಜನ", "ಸಂಖ್ಯೆ"],
+    answer: 0,
+    explanation: "‘ಐ’ ಸಂಯುಕ್ತ ಸ್ವರ."
+  },
+  {
+    question: "‘ಒ’ ಮತ್ತು ‘ಓ’ ಗಳಲ್ಲಿ ಯಾವುದು ದೀರ್ಘ ಸ್ವರ?",
+    options: ["ಒ", "ಓ", "ಎರಡೂ ಹ್ರಸ್ವ"],
+    answer: 1,
+    explanation: "‘ಓ’ ದೀರ್ಘ ಸ್ವರ."
+  },
+  {
+    question: "‘ಔ’ ಯಾವ ಬಗೆಯ ಸ್ವರ?",
+    options: ["ಸಂಯುಕ್ತ ಸ್ವರ", "ವ್ಯಂಜನ", "ಸಂಖ್ಯೆ"],
+    answer: 0,
+    explanation: "‘ಔ’ ಸಂಯುಕ್ತ ಸ್ವರ."
+  },
+  {
+    question: "ಕನ್ನಡದಲ್ಲಿ ಮೊದಲ ಐದು ಸ್ವರಾಕ್ಷರಗಳು ಯಾವುವು?",
+    options: [
+      "ಅ, ಆ, ಇ, ಈ, ಉ",
+      "ಕ, ಖ, ಗ, ಘ, ಙ",
+      "ಅಂ, ಅಃ, ಕ, ಖ, ಗ"
+    ],
+    answer: 0,
+    explanation: "ಮೊದಲ ಐದು ಸ್ವರಗಳು: ಅ, ಆ, ಇ, ಈ, ಉ."
+  },
+  {
+    question: "‘ಅ’ ಯ ನಂತರ ಬರುವ ಅಕ್ಷರ ಯಾವುದು?",
+    options: ["ಇ", "ಆ", "ಉ"],
+    answer: 1,
+    explanation: "‘ಅ’ ಯ ನಂತರ ‘ಆ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "‘ಈ’ ಯ ನಂತರ ಬರುವ ಅಕ್ಷರ ಯಾವುದು?",
+    options: ["ಉ", "ಎ", "ಐ"],
+    answer: 0,
+    explanation: "‘ಈ’ ಯ ನಂತರ ‘ಉ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "‘ಊ’ ಯ ನಂತರ ಬರುವ ಅಕ್ಷರ ಯಾವುದು?",
+    options: ["ಋ", "ಎ", "ಐ"],
+    answer: 0,
+    explanation: "‘ಊ’ ಯ ನಂತರ ‘ಋ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "‘ಏ’ ಯ ನಂತರ ಬರುವ ಅಕ್ಷರ ಯಾವುದು?",
+    options: ["ಐ", "ಒ", "ಔ"],
+    answer: 0,
+    explanation: "‘ಏ’ ಯ ನಂತರ ‘ಐ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "‘ಓ’ ಯ ನಂತರ ಬರುವ ಅಕ್ಷರ ಯಾವುದು?",
+    options: ["ಔ", "ಅಂ", "ಅಃ"],
+    answer: 0,
+    explanation: "‘ಓ’ ಯ ನಂತರ ‘ಔ’ ಬರುತ್ತದೆ."
+  },
+  {
+    question: "ಕೆಳಗಿನವುಗಳಲ್ಲಿ ಸ್ವರಾಕ್ಷರ ಯಾವುದು?",
+    options: ["ಕ", "ಅ", "ಗ"],
+    answer: 1,
+    explanation: "‘ಅ’ ಸ್ವರಾಕ್ಷರ."
+  },
+  {
+    question: "ಕೆಳಗಿನವುಗಳಲ್ಲಿ ಸ್ವರಾಕ್ಷರ ಅಲ್ಲದ್ದು ಯಾವುದು?",
+    options: ["ಈ", "ಊ", "ಕ"],
+    answer: 2,
+    explanation: "‘ಕ’ ವ್ಯಂಜನಾಕ್ಷರ."
+  },
+  {
+    question: "‘ಐ’ ಯನ್ನು ಯಾವ ಎರಡು ಸ್ವರಗಳ ಸೇರ್ಪಡೆ ಎಂದು ಕಾಣಬಹುದು?",
+    options: ["ಅ + ಇ", "ಅ + ಎ", "ಇ + ಎ"],
+    answer: 1,
+    explanation: "‘ಐ’ ಯನ್ನು ‘ಅ + ಎ’ ಎಂದು ಕಾಣಬಹುದು."
+  },
+  {
+    question: "‘ಔ’ ಯನ್ನು ಯಾವ ಎರಡು ಸ್ವರಗಳ ಸೇರ್ಪಡೆ ಎಂದು ಕಾಣಬಹುದು?",
+    options: ["ಅ + ಒ", "ಅ + ಓ", "ಒ + ಓ"],
+    answer: 1,
+    explanation: "‘ಔ’ ಯನ್ನು ‘ಅ + ಓ’ ಎಂದು ಕಾಣಬಹುದು."
+  },
+  {
+    question: "ಕನ್ನಡದ ಮೂಲ ಸ್ವರಾಕ್ಷರಗಳಲ್ಲಿ ಕೊನೆಯ ಸ್ವರಾಕ್ಷರ ಯಾವುದು?",
+    options: ["ಒ", "ಓ", "ಔ"],
+    answer: 2,
+    explanation: "‘ಔ’ ಮೂಲ ಸ್ವರಾಕ್ಷರಗಳಲ್ಲಿ ಕೊನೆಯದು."
+  }
+];
+
+const TIME_PER_QUESTION = 30;
+
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = TIME_PER_QUESTION;
+let timer = null;
+let userAnswers = [];
+
+const coverScreen = document.getElementById("coverScreen");
+const quizScreen = document.getElementById("quizScreen");
+const resultScreen = document.getElementById("resultScreen");
+
+const questionText = document.getElementById("questionText");
+const optionsBox = document.getElementById("optionsBox");
+const feedback = document.getElementById("feedback");
+const nextButton = document.getElementById("nextButton");
+const progressFill = document.getElementById("progressFill");
+const timerBox = document.getElementById("timer");
+const reviewList = document.getElementById("reviewList");
+
+function startQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  userAnswers = [];
+
+  coverScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
+
+  showQuestion();
+}
+
+function showQuestion() {
+  const question = questions[currentQuestion];
+
+  questionText.textContent =
+    "ಪ್ರಶ್ನೆ " + (currentQuestion + 1) + ": " + question.question;
+
+  optionsBox.innerHTML = "";
+  feedback.textContent = "";
+  feedback.className = "feedback";
+  nextButton.classList.add("hidden");
+
+  updateProgress();
+  startTimer();
+
+  question.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = option;
+
+    button.onclick = function () {
+      selectAnswer(index, button);
+    };
+
+    optionsBox.appendChild(button);
+  });
+}
+
+function selectAnswer(selectedIndex, selectedButton) {
+  stopTimer();
+
+  const question = questions[currentQuestion];
+  const allButtons = optionsBox.querySelectorAll(".option");
+
+  allButtons.forEach(button => {
+    button.disabled = true;
+  });
+
+  const isCorrect = selectedIndex === question.answer;
+
+  if (isCorrect) {
+    score++;
+    selectedButton.classList.add("correct");
+    feedback.textContent = "ಸರಿಯಾಗಿದೆ! 🎉";
+    feedback.className = "feedback correct";
+  } else {
+    selectedButton.classList.add("wrong");
+    allButtons[question.answer].classList.add("correct");
+    feedback.textContent = "ತಪ್ಪಾಗಿದೆ. " + question.explanation;
+    feedback.className = "feedback wrong";
+  }
+
+  userAnswers.push({
+    question: question.question,
+    selected: question.options[selectedIndex],
+    correctAnswer: question.options[question.answer],
+    isCorrect: isCorrect,
+    explanation: question.explanation
+  });
+
+  nextButton.classList.remove("hidden");
+}
+
+function updateProgress() {
+  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  progressFill.style.width = progress + "%";
+}
+
+function startTimer() {
+  stopTimer();
+
+  timeLeft = TIME_PER_QUESTION;
+  timerBox.textContent = timeLeft;
+
+  timer = setInterval(function () {
+    timeLeft--;
+    timerBox.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      stopTimer();
+      selectAnswer(-1, optionsBox.querySelector(".option"));
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timer);
+}
+
+function nextQuestion() {
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  stopTimer();
+
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.remove("hidden");
+
+  document.getElementById("finalScore").textContent =
+    "ನಿಮ್ಮ ಅಂಕ: " + score + " / " + questions.length;
+
+  let message = "";
+
+  if (score === questions.length) {
+    message = "ಅದ್ಭುತ! ನೀವು ಎಲ್ಲವನ್ನೂ ಸರಿಯಾಗಿ ಉತ್ತರಿಸಿದ್ದೀರಿ! 🎉";
+  } else if (score >= 15) {
+    message = "ಚೆನ್ನಾಗಿದೆ! ಇನ್ನಷ್ಟು ಅಭ್ಯಾಸ ಮಾಡಿ.";
+  } else {
+    message = "ಚಿಂತೆ ಬೇಡ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ!";
+  }
+
+  document.getElementById("resultMessage").textContent = message;
+
+  reviewList.innerHTML = "";
+
+  userAnswers.forEach(function (item) {
+    const listItem = document.createElement("li");
+    listItem.className = item.isCorrect ? "review-correct" : "review-wrong";
+
+    listItem.innerHTML =
+      "<strong>" + item.question + "</strong><br>" +
+      "ನಿಮ್ಮ ಉತ್ತರ: " + item.selected + "<br>" +
+      "ಸರಿಯಾದ ಉತ್ತರ: " + item.correctAnswer + "<br>" +
+      "<em>" + item.explanation + "</em>";
+
+    reviewList.appendChild(listItem);
+  });
+}
+
+function goHome() {
+  stopTimer();
+
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  coverScreen.classList.remove("hidden");
+}
+
+nextButton.onclick = nextQuestion;
+</script>
+
+</body>
+</html>
