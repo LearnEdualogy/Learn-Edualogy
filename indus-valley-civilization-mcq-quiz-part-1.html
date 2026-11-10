@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ಸಿಂಧೂ ಕಣಿವೆ ನಾಗರಿಕತೆ ಭಾಗ 1: ಪ್ರಶ್ನೆ 1 - 50 MCQ ಕ್ವಿಜ್</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: "Noto Sans Kannada", "Noto Sans", sans-serif;
+    background: #EAF2FA;
+    color: #1A1A1A;
+  }
+
+  .container {
+    max-width: 650px;
+    margin: auto;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 4px solid #1F3A5F;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .cover-icon {
+    text-align: center;
+    font-size: 55px;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    color: #1F3A5F;
+    text-align: center;
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #444444;
+    font-size: 17px;
+    margin: 10px 0 20px;
+  }
+
+  .info-box {
+    background: #FFF6DC;
+    border: 3px solid #FFC93C;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .info-box p {
+    margin: 6px 0;
+    font-size: 16px;
+  }
+
+  .info-box strong {
+    color: #1F3A5F;
+  }
+
+  .start-button {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #1F3A5F;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .start-button:hover {
+    background: #2E8B57;
+    transform: translateY(-3px);
+  }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #1F3A5F;
+  }
+
+  .timer {
+    background: #FFC93C;
+    color: #1F3A5F;
+    padding: 6px 14px;
+    border-radius: 20px;
+  }
+
+  .progress-bar {
+    height: 12px;
+    background: #D9E4F1;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #2E8B57;
+    transition: width 0.3s ease;
+  }
+
+  .question {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .option {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    font-size: 18px;
+    text-align: left;
+    color: #1A1A1A;
+    background: #F5F9FF;
+    border: 2px solid #1F3A5F;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .option:hover:not(:disabled) {
+    background: #FFC93C;
+  }
+
+  .option:disabled {
+    cursor: not-allowed;
+  }
+
+  .correct {
+    background: #EAF7EF !important;
+    border-color: #2E8B57 !important;
+  }
+
+  .wrong {
+    background: #FDECEA !important;
+    border-color: #C0392B !important;
+  }
+
+  .feedback {
+    min-height: 30px;
+    margin: 15px 0;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .feedback.correct {
+    color: #2E8B57;
+  }
+
+  .feedback.wrong {
+    color: #C0392B;
+  }
+
+  .next-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #1F3A5F;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .result-score {
+    font-size: 30px;
+    font-weight: bold;
+    color: #1F3A5F;
+    text-align: center;
+  }
+
+  .result-message {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .review-list {
+    padding: 0;
+    list-style: none;
+  }
+
+  .review-list li {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: #EAF2FA;
+  }
+
+  .review-correct {
+    border-left: 6px solid #2E8B57;
+  }
+
+  .review-wrong {
+    border-left: 6px solid #C0392B;
+  }
+
+  .home-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1F3A5F;
+    background: #E5E7EB;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @media (max-width: 500px) {
+    .card {
+      padding: 18px;
+    }
+
+    h1 {
+      font-size: 23px;
+    }
+
+    .question {
+      font-size: 18px;
+    }
+
+    .option {
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+
+    <!-- ಮುಖಪುಟ -->
+    <section id="coverScreen">
+      <div class="cover-icon">📖</div>
+
+      <h1>ಸಿಂಧೂ ಕಣಿವೆ ನಾಗರಿಕತೆ ಭಾಗ 1</h1>
+
+      <p class="subtitle">50 MCQ ಪ್ರಶ್ನೋತ್ತರಗಳು</p>
+
+      <div class="info-box">
+        <p><strong>ವಿಷಯ:</strong> ಇತಿಹಾಸ</p>
+        <p><strong>ತರಗತಿ:</strong> 1-12ನೇ ತರಗತಿ</p>
+        <p><strong>ಒಟ್ಟು ಪ್ರಶ್ನೆಗಳು:</strong> 50</p>
+        <p><strong>ಪ್ರತಿ ಪ್ರಶ್ನೆಗೆ:</strong> 1 ಅಂಕ</p>
+        <p><strong>ಸಮಯ:</strong> ಪ್ರತಿ ಪ್ರಶ್ನೆಗೆ 30 ಸೆಕೆಂಡುಗಳು</p>
+      </div>
+
+      <button class="start-button" onclick="startQuiz()">
+        ಕ್ವಿಜ್ ಪ್ರಾರಂಭಿಸಿ
+      </button>
+    </section>
+
+    <!-- ಕ್ವಿಜ್ ಪುಟ -->
+    <section id="quizScreen" class="hidden">
+      <div class="quiz-header">
+        <span>ಸಿಂಧೂ ಕಣಿವೆ ನಾಗರಿಕತೆ ಭಾಗ 1</span>
+        <span class="timer" id="timer">30</span>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="question" id="questionText"></div>
+      <div id="optionsBox"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <button class="next-button hidden" id="nextButton">
+        ಮುಂದಿನ ಪ್ರಶ್ನೆ
+      </button>
+    </section>
+
+    <!-- ಫಲಿತಾಂಶ ಪುಟ -->
+    <section id="resultScreen" class="hidden">
+      <h1>ಕ್ವಿಜ್ ಮುಗಿಯಿತು!</h1>
+
+      <p class="result-score" id="finalScore"></p>
+      <p class="result-message" id="resultMessage"></p>
+
+      <h2 style="color:#1F3A5F;">ನಿಮ್ಮ ಉತ್ತರಗಳು</h2>
+      <ul class="review-list" id="reviewList"></ul>
+
+      <button class="home-button" onclick="goHome()">
+        ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ
+      </button>
+    </section>
+
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "ಸಿಂಧೂ ಕಣಿವೆ ನಾಗರಿಕತೆಯನ್ನು ಸಾಮಾನ್ಯವಾಗಿ ಯಾವ ಹೆಸರಿನಿಂದಲೂ ಕರೆಯಲಾಗುತ್ತದೆ?",
+    options: ["ವೈದಿಕ ನಾಗರಿಕತೆ", "ಹರಪ್ಪನ್ ನಾಗರಿಕತೆ", "ಮೌರ್ಯ ನಾಗರಿಕತೆ", "ಗುಪ್ತ ನಾಗರಿಕತೆ"],
+    answer: 1,
+    explanation: "ಮೊದಲು ಅಗೆದ್ದ ಪ್ರಮುಖ ತಾಣ ಹರಪ್ಪಾ ಆದ್ದರಿಂದ ಇದನ್ನು ಹರಪ್ಪನ್ ನಾಗರಿಕತೆ ಎಂದೂ ಕರೆಯಲಾಗುತ್ತದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ಕಣಿವೆ ನಾಗರಿಕತೆಯ ಪ್ರಬುದ್ಧ ಹಂತವು ಸಾಮಾನ್ಯವಾಗಿ ಯಾವ ಅವಧಿಗೆ ಸೇರಿದೆ?",
+    options: ["ಕ್ರಿ.ಪೂ. 3500–2600", "ಕ್ರಿ.ಪೂ. 2600–1900", "ಕ್ರಿ.ಪೂ. 1500–600", "ಕ್ರಿ.ಪೂ. 600–300"],
+    answer: 1,
+    explanation: "ಪ್ರಬುದ್ಧ ಹರಪ್ಪನ್ ಹಂತವನ್ನು ಸಾಮಾನ್ಯವಾಗಿ ಕ್ರಿ.ಪೂ. 2600–1900 ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ."
+  },
+  {
+    question: "ಹರಪ್ಪಾ ಪ್ರದೇಶವು ಈಗ ಯಾವ ದೇಶದಲ್ಲಿದೆ?",
+    options: ["ಭಾರತ", "ಅಫ್ಘಾನಿಸ್ತಾನ", "ಪಾಕಿಸ್ತಾನ", "ಬಾಂಗ್ಲಾದೇಶ"],
+    answer: 2,
+    explanation: "ಹರಪ್ಪಾ ಇಂದಿನ ಪಾಕಿಸ್ತಾನದ ಪಂಜಾಬ್ ಪ್ರಾಂತ್ಯದಲ್ಲಿ, ರಾವಿ ನದಿ ದಂಡೆಯಲ್ಲಿದೆ."
+  },
+  {
+    question: "ಮೊಹೆಂಜೊದಾರೋ ಪಟ್ಟಣವು ಯಾವ ನದಿಯ ದಂಡೆಯಲ್ಲಿದೆ?",
+    options: ["ಸಿಂಧೂ ನದಿ", "ರಾವಿ ನದಿ", "ಘಗ್ಗರ್ ನದಿ", "ಸರಸ್ವತಿ ನದಿ"],
+    answer: 0,
+    explanation: "ಮೊಹೆಂಜೊದಾರೋ ಸಿಂಧೂ ನದಿಯ ದಂಡೆಯಲ್ಲಿ, ಇಂದಿನ ಪಾಕಿಸ್ತಾನದ ಸಿಂಧ್ ಪ್ರಾಂತ್ಯದಲ್ಲಿದೆ."
+  },
+  {
+    question: "ಹರಪ್ಪಾ ಸ್ಥಳವನ್ನು 1921ರಲ್ಲಿ ಅಗೆದವರು ಯಾರು?",
+    options: ["ಆರ್.ಡಿ. ಬ್ಯಾನರ್ಜಿ", "ದಯಾರಾಮ್ ಸಾಹನಿ", "ಎಸ್.ಆರ್. ರಾವ್", "ಜೆ.ಪಿ. ಜೋಶಿ"],
+    answer: 1,
+    explanation: "ದಯಾರಾಮ್ ಸಾಹನಿ ನೇತೃತ್ವದ ತಂಡ 1921ರಲ್ಲಿ ಹರಪ್ಪಾವನ್ನು ಅಗೆದಿತು."
+  },
+  {
+    question: "ಮೊಹೆಂಜೊದಾರೋವನ್ನು 1922ರಲ್ಲಿ ಅಗೆದವರು ಯಾರು?",
+    options: ["ದಯಾರಾಮ್ ಸಾಹನಿ", "ಆರ್.ಡಿ. ಬ್ಯಾನರ್ಜಿ", "ಎನ್.ಜಿ. ಮಜುಂದಾರ್", "ಎಂ.ಎಸ್. ವಾಟ್ಸ್"],
+    answer: 1,
+    explanation: "ಆರ್.ಡಿ. ಬ್ಯಾನರ್ಜಿ 1922ರಲ್ಲಿ ಮೊಹೆಂಜೊದಾರೋವನ್ನು ಅಗೆದರು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಪತ್ತೆಗೆ ಕಾರಣವಾದ ಪ್ರಮುಖ ಎರಡು ಸ್ಥಳಗಳು ಯಾವುವು?",
+    options: ["ಲೋಥಲ್ ಮತ್ತು ಕಾಳಿಬಂಗಾ", "ಧೋಳಾವೀರಾ ಮತ್ತು ರಾಖಿಗಢಿ", "ಹರಪ್ಪಾ ಮತ್ತು ಮೊಹೆಂಜೊದಾರೋ", "ಚನ್ಹುದಾರೋ ಮತ್ತು ಸುರ್ಕೊಟಡ"],
+    answer: 2,
+    explanation: "1920–22ರ ಅವಧಿಯಲ್ಲಿ ಹರಪ್ಪಾ ಮತ್ತು ಮೊಹೆಂಜೊದಾರೋಗಳ ಉತ್ಖನನದಿಂದ ಈ ನಾಗರಿಕತೆ ಪತ್ತೆಯಾಯಿತು."
+  },
+  {
+    question: "“ಮೊಹೆಂಜೊದಾರೋ” ಎಂಬ ಹೆಸರಿನ ಸರಿಸುಮಾರು ಅರ್ಥವೇನು?",
+    options: ["ಜೀವಂತ ನಗರ", "ಸತ್ತವರ ದಿಬ್ಬ", "ನೀರಿನ ನಗರ", "ವ್ಯಾಪಾರ ನಗರ"],
+    answer: 1,
+    explanation: "ಸಿಂಧಿ ಭಾಷೆಯಲ್ಲಿ ಮೊಹೆಂಜೊದಾರೋ ಎಂದರೆ ಸಾಮಾನ್ಯವಾಗಿ “ಸತ್ತವರ ದಿಬ್ಬ” ಎಂದರ್ಥ."
+  },
+  {
+    question: "ಮೊಹೆಂಜೊದಾರೋದಲ್ಲಿ ಕಂಡುಬಂದ ಪ್ರಸಿದ್ಧ ಸಾರ್ವಜನಿಕ ಸ್ನಾನಗೃಹವನ್ನು ಏನೆಂದು ಕರೆಯಲಾಗಿದೆ?",
+    options: ["ಮಹಾ ಧಾನ್ಯಾಗಾರ", "ಮಹಾ ಸ್ನಾನಗೃಹ", "ಮಹಾ ಅರಮನೆ", "ಮಹಾ ದೇವಾಲಯ"],
+    answer: 1,
+    explanation: "ಮೊಹೆಂಜೊದಾರೋದ ಕೋಟೆ ಪ್ರದೇಶದಲ್ಲಿ ಕಂಡುಬಂದ ದೊಡ್ಡ ಜಲಾಶಯ/ಸ್ನಾನಗೃಹವನ್ನು ಮಹಾ ಸ್ನಾನಗೃಹ (Great Bath) ಎಂದು ಕರೆಯಲಾಗಿದೆ."
+  },
+  {
+    question: "ಹರಪ್ಪಾದಲ್ಲಿ ಕಂಡುಬಂದ ಪ್ರಮುಖ ಸಾರ್ವಜನಿಕ ರಚನೆ ಯಾವುದು?",
+    options: ["ಧಾನ್ಯಾಗಾರಗಳು", "ದೊಡ್ಡ ದೇವಾಲಯ", "ಅರಮನೆ", "ಶವಸಂಸ್ಕಾರ ಮಂದಿರ"],
+    answer: 0,
+    explanation: "ಹರಪ್ಪಾದಲ್ಲಿ ಎರಡು ಸಾಲುಗಳಲ್ಲಿ ಆರು ಘಟಕಗಳನ್ನು ಹೊಂದಿದ ಧಾನ್ಯಾಗಾರಗಳ ಅವಶೇಷ ಕಂಡುಬಂದಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ನಗರಗಳಲ್ಲಿ ಮನೆಗಳ ನಿರ್ಮಾಣಕ್ಕೆ ಮುಖ್ಯವಾಗಿ ಬಳಸಲಾದ ವಸ್ತು ಯಾವುದು?",
+    options: ["ಕಲ್ಲು ಮತ್ತು ಮರ", "ಸುಟ್ಟ ಇಟ್ಟಿಗೆ", "ಕಬ್ಬಿಣದ ಪಟ್ಟಿ", "ಸಿಮೆಂಟ್"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ನರು ಗಾತ್ರದಲ್ಲಿ ಏಕರೀತಿಯ ಸುಟ್ಟ ಇಟ್ಟಿಗೆಗಳನ್ನು ವ್ಯಾಪಕವಾಗಿ ಬಳಸುತ್ತಿದ್ದರು."
+  },
+  {
+    question: "ಹರಪ್ಪನ್ ನಗರ ಯೋಜನೆಯ ಪ್ರಮುಖ ಲಕ್ಷಣವೇನು?",
+    options: ["ಅರಮನೆ ಕೇಂದ್ರಿತ ವಿನ್ಯಾಸ", "ಚದುರಂಗ ರಸ್ತೆ ವಿನ್ಯಾಸ", "ವೃತ್ತಾಕಾರ ರಸ್ತೆ ವಿನ್ಯಾಸ", "ದೇವಾಲಯ ಕೇಂದ್ರಿತ ವಿನ್ಯಾಸ"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ನಗರಗಳಲ್ಲಿ ಸಮಾನಾಂತರ ರಸ್ತೆಗಳು ಒಂದನ್ನೊಂದು ಹೆಚ್ಚಾಗಿ ಹೇರಳವಾಗಿ ಛೇದಿಸುತ್ತಿದ್ದುದರಿಂದ ಚದುರಂಗ ವಿನ್ಯಾಸ ಕಂಡುಬರುತ್ತದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ನಗರಗಳಲ್ಲಿ ಸಾಮಾನ್ಯವಾಗಿ ಎರಡು ಪ್ರಮುಖ ವಿಭಾಗಗಳು ಯಾವುವು?",
+    options: ["ಬಂದರು ಮತ್ತು ಮಾರುಕಟ್ಟೆ", "ಕೋಟೆ ಮತ್ತು ಕೆಳ ನಗರ", "ದೇವಾಲಯ ಮತ್ತು ಶಾಲೆ", "ಅರಮನೆ ಮತ್ತು ಸೇನಾನೆಲೆ"],
+    answer: 1,
+    explanation: "ಅನೇಕ ಹರಪ್ಪನ್ ನಗರಗಳಲ್ಲಿ ಎತ್ತರದ ಕೋಟೆ ಪ್ರದೇಶ (Citadel) ಮತ್ತು ಕೆಳ ನಗರ (Lower Town) ಇದ್ದವು."
+  },
+  {
+    question: "ಚನ್ಹುದಾರೋದ ವಿಶೇಷ ಗುರುತು ಯಾವುದು?",
+    options: ["ಇದು ಅತಿ ದೊಡ್ಡ ಬಂದರು ನಗರ", "ಇದರಲ್ಲಿ ಕೋಟೆ ಇಲ್ಲ", "ಇದರಲ್ಲಿ ಮಾತ್ರ ದೊಡ್ಡ ಜಲಾಶಯಗಳಿವೆ", "ಇದು ಅತಿ ದೊಡ್ಡ ಹರಪ್ಪನ್ ನಗರ"],
+    answer: 1,
+    explanation: "ಚನ್ಹುದಾರೋವು ಕೋಟೆ ಇಲ್ಲದ ಅಪರೂಪದ ಹರಪ್ಪನ್ ನಗರವಾಗಿದ್ದು, ಕುಶಲಕಾರ್ಮಿಕ ಕೇಂದ್ರವಾಗಿತ್ತು."
+  },
+  {
+    question: "ಲೋಥಲ್ ಸ್ಥಳವು ಈಗಿನ ಯಾವ ರಾಜ್ಯದಲ್ಲಿದೆ?",
+    options: ["ರಾಜಸ್ಥಾನ", "ಗುಜರಾತ್", "ಹರಿಯಾಣ", "ಪಂಜಾಬ್"],
+    answer: 1,
+    explanation: "ಲೋಥಲ್ ಗುಜರಾತ್‌ನ ಅಹಮದಾಬಾದ್ ಜಿಲ್ಲೆಯಲ್ಲಿದೆ."
+  },
+  {
+    question: "ಲೋಥಲ್‌ನಲ್ಲಿ ಕಂಡುಬಂದ ಪ್ರಮುಖ ರಚನೆ ಯಾವುದು?",
+    options: ["ಮಹಾ ಸ್ನಾನಗೃಹ", "ಬಂದರು/ಡಾಕ್‌ಯಾರ್ಡ್", "ಬೃಹತ್ ಅರಮನೆ", "ವೇದಿಕೆ ದೇವಾಲಯ"],
+    answer: 1,
+    explanation: "ಲೋಥಲ್‌ನಲ್ಲಿ ಪ್ರಾಚೀನ ಬಂದರು ರಚನೆಯ ಅವಶೇಷ ಕಂಡುಬಂದಿದ್ದು, ಇದು ಸಮುದ್ರ ವ್ಯಾಪಾರದ ಪ್ರಾಮುಖ್ಯವನ್ನು ಸೂಚಿಸುತ್ತದೆ."
+  },
+  {
+    question: "ಕಾಳಿಬಂಗಾದಲ್ಲಿ ಕಂಡುಬಂದ ವಿಶಿಷ್ಟ ಕೃಷಿ ಸಾಕ್ಷ್ಯವೇನು?",
+    options: ["ನೀರಾವರಿ ಕೊಳವೆಗಳು", "ಉಳುಮೆ ಮಾಡಿದ ಹೊಲ", "ಹಗ್ಗ ತಯಾರಿಕೆ ಕಾರ್ಖಾನೆ", "ಸಿಲ್ಕ್ ನೂಲುವ ಯಂತ್ರ"],
+    answer: 1,
+    explanation: "ಕಾಳಿಬಂಗಾದಲ್ಲಿ ಪ್ರಾಚೀನ ಉಳುಮೆ ಮಾಡಿದ ಹೊಲದ ಸಾಕ್ಷ್ಯ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಕಾಳಿಬಂಗಾ ಸ್ಥಳವು ಈಗಿನ ಯಾವ ರಾಜ್ಯದಲ್ಲಿದೆ?",
+    options: ["ಗುಜರಾತ್", "ರಾಜಸ್ಥಾನ", "ಪಂಜಾಬ್", "ಉತ್ತರ ಪ್ರದೇಶ"],
+    answer: 1,
+    explanation: "ಕಾಳಿಬಂಗಾ ರಾಜಸ್ಥಾನದ ಹನುಮಾನಗಢ ಜಿಲ್ಲೆಯಲ್ಲಿ, ಘಗ್ಗರ್ ನದಿ ದಂಡೆಯಲ್ಲಿದೆ."
+  },
+  {
+    question: "ಧೋಳಾವೀರಾ ಸ್ಥಳವು ಯಾವ ಜಿಲ್ಲೆಯಲ್ಲಿದೆ?",
+    options: ["ಕಚ್", "ಅಹಮದಾಬಾದ್", "ಸೂರತ್", "ರಾಜ್ಕೋಟ್"],
+    answer: 0,
+    explanation: "ಧೋಳಾವೀರಾ ಗುಜರಾತ್‌ನ ಕಚ್ ಜಿಲ್ಲೆಯ ಖಡಿರ್ ಬೆಟ್ ದ್ವೀಪದಲ್ಲಿದೆ."
+  },
+  {
+    question: "ಧೋಳಾವೀರಾದಲ್ಲಿ ಕಂಡುಬಂದ ಪ್ರಮುಖ ವಿಶಿಷ್ಟತೆ ಯಾವುದು?",
+    options: ["ವಿಶಾಲವಾದ ಜಲಾಶಯಗಳು", "ಉಕ್ಕಿನ ಆಯುಧಗಳು", "ದೊಡ್ಡ ದೇವಾಲಯ", "ಬಂಡೆಗಲ್ಲಿನ ಶಿಲಾಶಾಸನ"],
+    answer: 0,
+    explanation: "ಧೋಳಾವೀರಾದಲ್ಲಿ ದೊಡ್ಡ ಜಲಾಶಯಗಳು ಮತ್ತು ಜಲ ಸಂಗ್ರಹಣಾ ವ್ಯವಸ್ಥೆಯ ಸಾಕ್ಷ್ಯ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಧೋಳಾವೀರಾದಲ್ಲಿ ಕಂಡುಬಂದ ದೊಡ್ಡ ಫಲಕವನ್ನು ಸಾಮಾನ್ಯವಾಗಿ ಏನೆಂದು ಕರೆಯಲಾಗಿದೆ?",
+    options: ["ರಾಜ ಘೋಷಣೆ ಫಲಕ", "ಸಂಕೇತ ಫಲಕ/ಚಿಹ್ನೆ ಫಲಕ", "ವ್ಯಾಪಾರ ಪತ್ರ", "ಯುದ್ಧ ಘೋಷಣೆ"],
+    answer: 1,
+    explanation: "ಧೋಳಾವೀರಾದಲ್ಲಿ ಹತ್ತು ದೊಡ್ಡ ಹರಪ್ಪನ್ ಲಿಪಿ ಚಿಹ್ನೆಗಳನ್ನು ಹೊಂದಿದ ಫಲಕ ಕಂಡುಬಂದಿದ್ದು, ಇದನ್ನು ಸಂಕೇತ ಫಲಕ ಎಂದು ಕರೆಯಲಾಗಿದೆ."
+  },
+  {
+    question: "ರಾಖಿಗಢಿ ಸ್ಥಳವು ಯಾವ ರಾಜ್ಯದಲ್ಲಿದೆ?",
+    options: ["ಪಂಜಾಬ್", "ಹರಿಯಾಣ", "ಉತ್ತರಾಖಂಡ", "ಉತ್ತರ ಪ್ರದೇಶ"],
+    answer: 1,
+    explanation: "ರಾಖಿಗಢಿ ಹರಿಯಾಣದ ಹಿಸಾರ್ ಜಿಲ್ಲೆಯಲ್ಲಿದೆ."
+  },
+  {
+    question: "ರಾಖಿಗಢಿಯ ಪ್ರಮುಖ ಮಹತ್ವವೇನು?",
+    options: ["ಇದು ಅತಿ ದೊಡ್ಡ ಹರಪ್ಪನ್ ಸ್ಥಳಗಳಲ್ಲಿ ಒಂದಾಗಿದೆ", "ಇಲ್ಲಿ ಮಾತ್ರ ಬಂದರು ಕಂಡುಬಂದಿದೆ", "ಇಲ್ಲಿ ಮಾತ್ರ ಕಬ್ಬಿಣದ ಆಯುಧಗಳಿವೆ", "ಇಲ್ಲಿ ಮಾತ್ರ ವೇದಗ್ರಂಥಗಳ ಅವಶೇಷವಿದೆ"],
+    answer: 0,
+    explanation: "ರಾಖಿಗಢಿಯು ವಿಸ್ತೀರ್ಣದ ದೃಷ್ಟಿಯಿಂದ ಅತಿ ದೊಡ್ಡ ಹರಪ್ಪನ್ ಸ್ಥಳಗಳಲ್ಲಿ ಒಂದಾಗಿದೆ."
+  },
+  {
+    question: "ಬನಾವಲಿ ಸ್ಥಳವು ಯಾವ ರಾಜ್ಯದಲ್ಲಿದೆ?",
+    options: ["ರಾಜಸ್ಥಾನ", "ಹರಿಯಾಣ", "ಗುಜರಾತ್", "ಪಂಜಾಬ್"],
+    answer: 1,
+    explanation: "ಬನಾವಲಿ ಹರಿಯಾಣದ ಹಿಸಾರ್ ಜಿಲ್ಲೆಯಲ್ಲಿದೆ."
+  },
+  {
+    question: "ಬನಾವಲಿಯಲ್ಲಿ ಕಂಡುಬಂದ ವಿಶೇಷ ಸಾಕ್ಷ್ಯವೇನು?",
+    options: ["ಕಬ್ಬಿಣದ ಕತ್ತಿ", "ಮಣ್ಣಿನ ನೇಗಿಲಿನ ಮಾದರಿ", "ಚಿನ್ನದ ಮುದ್ರೆ", "ದೊಡ್ಡ ದೇವಾಲಯ"],
+    answer: 1,
+    explanation: "ಬನಾವಲಿಯಲ್ಲಿ ಮಣ್ಣಿನ ನೇಗಿಲಿನ ಮಾದರಿ ಮತ್ತು ಬಾರ್ಲಿ ಧಾನ್ಯದ ಸಾಕ್ಷ್ಯ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಸುರ್ಕೊಟಡ ಸ್ಥಳವು ಯಾವ ರಾಜ್ಯದಲ್ಲಿದೆ?",
+    options: ["ಗುಜರಾತ್", "ರಾಜಸ್ಥಾನ", "ಹರಿಯಾಣ", "ಪಂಜಾಬ್"],
+    answer: 0,
+    explanation: "ಸುರ್ಕೊಟಡ ಗುಜರಾತ್‌ನಲ್ಲಿದೆ."
+  },
+  {
+    question: "ಸುರ್ಕೊಟಡದಲ್ಲಿ ಕಂಡುಬಂದ ಪ್ರಾಣಿ ಸಂಬಂಧಿ ಪ್ರಮುಖ ಸಾಕ್ಷ್ಯವೇನು?",
+    options: ["ಕುದುರೆ ಮೂಳೆಗಳು", "ಡೈನೋಸಾರ್ ಮೂಳೆಗಳು", "ಹಂದಿ ಮೂಳೆಗಳು", "ಒಂಟೆ ಮೂಳೆಗಳು"],
+    answer: 0,
+    explanation: "ಸುರ್ಕೊಟಡದಲ್ಲಿ ಕುದುರೆ ಮೂಳೆಗಳ ಸಾಕ್ಷ್ಯ ಕಂಡುಬಂದಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಪ್ರಮುಖವಾಗಿ ಬೆಳೆಯುತ್ತಿದ್ದ ಬೆಳೆಗಳಲ್ಲಿ ಒಂದು ಯಾವುದು?",
+    options: ["ಮೆಕ್ಕೆ ಜೋಳ", "ಗೋಧಿ", "ಆಲೂಗಡ್ಡೆ", "ಟೊಮ್ಯಾಟೊ"],
+    answer: 1,
+    explanation: "ಗೋಧಿ, ಬಾರ್ಲಿ, ಅಕ್ಕಿ ಮುಂತಾದ ಬೆಳೆಗಳ ಸಾಕ್ಷ್ಯ ಹರಪ್ಪನ್ ಸ್ಥಳಗಳಲ್ಲಿ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಲೋಥಲ್‌ನಲ್ಲಿ ಕಂಡುಬಂದ ಬೆಳೆ ಸಂಬಂಧಿ ವಿಶೇಷ ಸಾಕ್ಷ್ಯವೇನು?",
+    options: ["ಅಕ್ಕಿ ಹೊಟ್ಟು", "ಕಬ್ಬಿನ ರಸ", "ಹತ್ತಿ ಬೀಜ", "ಮೆಣಸಿನ ಕಾಯಿ"],
+    answer: 0,
+    explanation: "ಲೋಥಲ್‌ನಲ್ಲಿ ಅಕ್ಕಿ ಹೊಟ್ಟಿನ ಸಾಕ್ಷ್ಯ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಪಳೆಯುತ್ತಿದ್ದ ಪ್ರಾಣಿಗಳಲ್ಲಿ ಪ್ರಮುಖವಾದವು ಯಾವುವು?",
+    options: ["ಹಂದಿ ಮತ್ತು ಕೋಳಿ", "ಎತ್ತು ಮತ್ತು ಎಮ್ಮೆ", "ಒಂಟೆ ಮತ್ತು ಕುದುರೆ", "ಕುರಿ ಮತ್ತು ಜಿಂಕೆ"],
+    answer: 1,
+    explanation: "ಎತ್ತು ಮತ್ತು ಎಮ್ಮೆ ಹರಪ್ಪನ್ ಜನರ ಪ್ರಮುಖ ಪಳೆಯುಳಿಕೆ ಪ್ರಾಣಿಗಳಲ್ಲಿ ಸೇರಿವೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ವ್ಯಾಪಾರಕ್ಕೆ ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ವಸ್ತುಗಳಲ್ಲಿ ಒಂದು ಯಾವುದು?",
+    options: ["ಉಕ್ಕು", "ಮುತ್ತು ಮತ್ತು ಆಭರಣ ವಸ್ತುಗಳು", "ಕಬ್ಬಿಣದ ಸಲಕರಣೆ", "ಕಾಗದ"],
+    answer: 1,
+    explanation: "ಮುತ್ತು, ಆಭರಣ ವಸ್ತುಗಳು, ಸಿಲಿಂಡರ್ ಮುದ್ರೆಗಳು ಮುಂತಾದವು ವ್ಯಾಪಾರದಲ್ಲಿ ಬಳಕೆಯಾಗುತ್ತಿದ್ದವು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ವ್ಯಾಪಾರಕ್ಕೆ ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ಸಾರಿಗೆ ವಿಧಾನವೇನು?",
+    options: ["ರೈಲು", "ಹಡಗು ಮತ್ತು ಎತ್ತಿನ ಗಾಡಿ", "ವಿಮಾನ", "ಕುದುರೆ ಸವಾರಿ"],
+    answer: 1,
+    explanation: "ಎತ್ತಿನ ಗಾಡಿ ಮತ್ತು ಹಡಗು/ದೋಣಿಗಳನ್ನು ಸಾರಿಗೆ ಮತ್ತು ವ್ಯಾಪಾರಕ್ಕೆ ಬಳಸಲಾಗಿತ್ತು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಮುದ್ರೆಗಳಲ್ಲಿ ಸಾಮಾನ್ಯವಾಗಿ ಕಂಡುಬರುವ ಪ್ರಾಣಿ ಯಾವುದು?",
+    options: ["ಸಿಂಹ", "ಏಕಶೃಂಗ", "ಹುಲಿ", "ಆನೆ"],
+    answer: 1,
+    explanation: "ಏಕಶೃಂಗ (unicorn) ಆಕೃತಿ ಹರಪ್ಪನ್ ಮುದ್ರೆಗಳಲ್ಲಿ ಸಾಮಾನ್ಯವಾಗಿ ಕಂಡುಬರುತ್ತದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಮುದ್ರೆಗಳಲ್ಲಿ ಸಾಮಾನ್ಯವಾಗಿ ಬಳಸಲಾದ ವಸ್ತು ಯಾವುದು?",
+    options: ["ಕಬ್ಬಿಣ", "ಸ್ಟೀಟೈಟ್", "ಆಲ್ಯುಮಿನಿಯಂ", "ಪ್ಲಾಸ್ಟಿಕ್"],
+    answer: 1,
+    explanation: "ಸ್ಟೀಟೈಟ್ (ಸೋಪ್‌ಸ್ಟೋನ್) ಮುದ್ರೆಗಳ ತಯಾರಿಕೆಯಲ್ಲಿ ವ್ಯಾಪಕವಾಗಿ ಬಳಸಲಾಗಿತ್ತು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಲಿಪಿಯನ್ನು ಇಂದಿಗೂ ಸರಿಯಾಗಿ ಓದಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ. ಇದಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಸರಿಯಾದ ಹೇಳಿಕೆ ಯಾವುದು?",
+    options: ["ಲಿಪಿಯನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಓದಲಾಗಿದೆ", "ಲಿಪಿಯನ್ನು ಇನ್ನೂ ಸಂಪೂರ್ಣವಾಗಿ ಓದಲಾಗಿಲ್ಲ", "ಲಿಪಿಯು ಸಂಸ್ಕೃತದಲ್ಲಿದೆ", "ಲಿಪಿಯು ಲ್ಯಾಟಿನ್ ಆಗಿದೆ"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ಲಿಪಿಯು ಇನ್ನೂ ಸಂಪೂರ್ಣವಾಗಿ ಅರ್ಥೈಸಲ್ಪಟ್ಟಿಲ್ಲ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಲಿಪಿಯನ್ನು ಸಾಮಾನ್ಯವಾಗಿ ಯಾವ ದಿಕ್ಕಿನಲ್ಲಿ ಬರೆಯಲಾಗಿದೆ ಎಂದು ಪರಿಗಣಿಸಲಾಗಿದೆ?",
+    options: ["ಎಡದಿಂದ ಬಲಕ್ಕೆ", "ಬಲದಿಂದ ಎಡಕ್ಕೆ", "ಮೇಲಿಂದ ಕೆಳಗೆ", "ಕೆಳಗಿಂದ ಮೇಲಕ್ಕೆ"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ಲಿಪಿಯನ್ನು ಸಾಮಾನ್ಯವಾಗಿ ಬಲದಿಂದ ಎಡಕ್ಕೆ ಬರೆಯಲಾಗಿದೆ ಎಂದು ಪರಿಗಣಿಸಲಾಗಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಲಿಪಿಯಲ್ಲಿ ಸುಮಾರು ಎಷ್ಟು ಚಿಹ್ನೆಗಳಿವೆ ಎಂದು ಅಂದಾಜಿಸಲಾಗಿದೆ?",
+    options: ["ಸುಮಾರು 100", "ಸುಮಾರು 400", "ಸುಮಾರು 1000", "ಸುಮಾರು 5000"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ಲಿಪಿಯಲ್ಲಿ ಸುಮಾರು 375–400 ಚಿಹ್ನೆಗಳಿವೆ ಎಂದು ಅಂದಾಜಿಸಲಾಗಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರ ಧಾರ್ಮಿಕ ನಂಬಿಕೆಗಳ ಬಗ್ಗೆ ಸರಿಯಾದ ಹೇಳಿಕೆ ಯಾವುದು?",
+    options: ["ದೊಡ್ಡ ದೇವಾಲಯಗಳು ಕಂಡುಬಂದಿವೆ", "ದೊಡ್ಡ ದೇವಾಲಯಗಳ ಸ್ಪಷ್ಟ ಸಾಕ್ಷ್ಯ ಕಡಿಮೆ", "ದೇವಾಲಯಗಳು ಮಾತ್ರ ಕಂಡುಬಂದಿವೆ", "ದೇವಾಲಯಗಳು ಮುಖ್ಯ ರಚನೆಗಳಾಗಿವೆ"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ಸ್ಥಳಗಳಲ್ಲಿ ದೊಡ್ಡ ದೇವಾಲಯಗಳ ಸ್ಪಷ್ಟ ಸಾಕ್ಷ್ಯ ಕಡಿಮೆ; ಆದರೆ ಧಾರ್ಮಿಕ ಚಿಹ್ನೆಗಳು ಮತ್ತು ಮುದ್ರೆಗಳು ದೊರೆತಿವೆ."
+  },
+  {
+    question: "ಮೊಹೆಂಜೊದಾರೋದಲ್ಲಿ ಕಂಡುಬಂದ ಪ್ರಸಿದ್ಧ ಕಂಚಿನ ಪ್ರತಿಮೆ ಯಾವುದು?",
+    options: ["ನೃತ್ಯಗಾತಿ ಪ್ರತಿಮೆ", "ಯೋಧ ಪ್ರತಿಮೆ", "ರಾಜ ಪ್ರತಿಮೆ", "ದೇವತೆ ಪ್ರತಿಮೆ"],
+    answer: 0,
+    explanation: "ಮೊಹೆಂಜೊದಾರೋದಲ್ಲಿ ಕಂಚಿನ ನೃತ್ಯಗಾತಿ ಪ್ರತಿಮೆ ಕಂಡುಬಂದಿದೆ."
+  },
+  {
+    question: "ಮೊಹೆಂಜೊದಾರೋದಲ್ಲಿ ಕಂಡುಬಂದ ಪ್ರಸಿದ್ಧ ಕಲ್ಲಿನ ಪ್ರತಿಮೆ ಯಾವುದು?",
+    options: ["ನೃತ್ಯಗಾತಿ ಪ್ರತಿಮೆ", "ಗಡ್ಡಧಾರಿ ಪುರುಷನ ಪ್ರತಿಮೆ", "ಯೋಧ ಪ್ರತಿಮೆ", "ದೇವತೆ ಪ್ರತಿಮೆ"],
+    answer: 1,
+    explanation: "ಮೊಹೆಂಜೊದಾರೋದಲ್ಲಿ ಗಡ್ಡಧಾರಿ ಪುರುಷನ ಕಲ್ಲಿನ ಪ್ರತಿಮೆ ಕಂಡುಬಂದಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ಲೋಹಗಳಲ್ಲಿ ಒಂದು ಯಾವುದು?",
+    options: ["ಕಬ್ಬಿಣ", "ತಾಮ್ರ", "ಅಲ್ಯುಮಿನಿಯಂ", "ನಿಕ್ಕಲ್"],
+    answer: 1,
+    explanation: "ತಾಮ್ರ ಮತ್ತು ಕಂಚು ಹರಪ್ಪನ್ ಜನರ ಪ್ರಮುಖ ಲೋಹಗಳಲ್ಲಿ ಸೇರಿವೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ಮಣಿ/ಆಭರಣ ವಸ್ತುಗಳಲ್ಲಿ ಒಂದು ಯಾವುದು?",
+    options: ["ಪ್ಲಾಸ್ಟಿಕ್", "ಮುತ್ತು", "ಅಲ್ಯುಮಿನಿಯಂ", "ರಬ್ಬರ್"],
+    answer: 1,
+    explanation: "ಮುತ್ತು ಮತ್ತು ಇತರ ಆಭರಣ ವಸ್ತುಗಳು ಹರಪ್ಪನ್ ಜನರ ಬಳಕೆಯಲ್ಲಿದ್ದವು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರ ಆರ್ಥಿಕ ಜೀವನದ ಪ್ರಮುಖ ಆಧಾರವೇನು?",
+    options: ["ಕೇವಲ ಬೇಟೆ", "ಕೃಷಿ, ಪಶುಪಾಲನೆ ಮತ್ತು ವ್ಯಾಪಾರ", "ಕೇವಲ ಮೀನುಗಾರಿಕೆ", "ಕೇವಲ ಗಣಿಗಾರಿಕೆ"],
+    answer: 1,
+    explanation: "ಕೃಷಿ, ಪಶುಪಾಲನೆ ಮತ್ತು ವ್ಯಾಪಾರ ಹರಪ್ಪನ್ ಆರ್ಥಿಕತೆಯ ಪ್ರಮುಖ ಆಧಾರಗಳಾಗಿದ್ದವು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರ ಸಾಮಾಜಿಕ ಜೀವನದ ಬಗ್ಗೆ ಸರಿಯಾದ ಹೇಳಿಕೆ ಯಾವುದು?",
+    options: ["ಸಮಾಜ ಸಂಪೂರ್ಣವಾಗಿ ಏಕರೀತಿಯದ್ದಾಗಿತ್ತು", "ಸಮಾಜದಲ್ಲಿ ವಿವಿಧ ವೃತ್ತಿಗಳು ಮತ್ತು ಸಾಮಾಜಿಕ ಗುಂಪುಗಳಿದ್ದವು", "ಸಮಾಜದಲ್ಲಿ ಯಾವ ವ್ಯತ್ಯಾಸವೂ ಇರಲಿಲ್ಲ", "ಸಮಾಜವು ಸಂಪೂರ್ಣವಾಗಿ ಗುಲಾಮಗಿರಿ ಆಧಾರಿತವಾಗಿತ್ತು"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ಸಮಾಜದಲ್ಲಿ ವಿವಿಧ ವೃತ್ತಿಗಳು ಮತ್ತು ಸಾಮಾಜಿಕ ಗುಂಪುಗಳಿದ್ದವು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ತೂಕ ಮತ್ತು ಅಳತೆ ವ್ಯವಸ್ಥೆಯ ಲಕ್ಷಣವೇನು?",
+    options: ["ಯಾವುದೇ ಪ್ರಮಾಣವಿಲ್ಲ", "ಏಕರೀತಿಯ ತೂಕ ಮತ್ತು ಅಳತೆ", "ಪ್ರತಿ ನಗರದಲ್ಲಿ ಬೇರೆ ಪ್ರಮಾಣ", "ಯಾವುದೇ ತೂಕ ಬಳಕೆಯಿಲ್ಲ"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ನಗರಗಳಲ್ಲಿ ಏಕರೀತಿಯ ತೂಕ ಮತ್ತು ಅಳತೆ ಬಳಕೆಯ ಸಾಕ್ಷ್ಯ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ಮಣಿ ತಯಾರಿಕಾ ಕೇಂದ್ರವೇನು?",
+    options: ["ಚನ್ಹುದಾರೋ", "ಹರಪ್ಪಾ", "ಮೊಹೆಂಜೊದಾರೋ", "ಕಾಳಿಬಂಗಾ"],
+    answer: 0,
+    explanation: "ಚನ್ಹುದಾರೋದಲ್ಲಿ ಮಣಿ ತಯಾರಿಕೆಯ ಕಾರ್ಖಾನೆ/ಕಾರ್ಯಾಗಾರದ ಸಾಕ್ಷ್ಯ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ಬಟ್ಟೆ ವಸ್ತುವೇನು?",
+    options: ["ಉಣ್ಣೆ", "ಹತ್ತಿ", "ರೇಷ್ಮೆ", "ಸಿಂಥೆಟಿಕ್ ನಾರು"],
+    answer: 1,
+    explanation: "ಮೊಹೆಂಜೊದಾರೋದಲ್ಲಿ ಹೆಣೆದ ಹತ್ತಿ ಬಟ್ಟೆಯ ತುಂಡಿನ ಸಾಕ್ಷ್ಯ ದೊರೆತಿದೆ."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ಸಾರಿಗೆ ಸಾಧನವೇನು?",
+    options: ["ಎತ್ತಿನ ಗಾಡಿ", "ಕುದುರೆ ಸವಾರಿ", "ರೈಲು", "ವಿಮಾನ"],
+    answer: 0,
+    explanation: "ಎತ್ತಿನ ಗಾಡಿ ಹರಪ್ಪನ್ ಜನರ ಪ್ರಮುಖ ಸಾರಿಗೆ ಸಾಧನವಾಗಿತ್ತು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ಮುದ್ರೆಗಳ ಉದ್ದೇಶವೇನು?",
+    options: ["ಆಭರಣ ಅಲಂಕಾರ ಮಾತ್ರ", "ವ್ಯಾಪಾರ ಮತ್ತು ಗುರುತಿಸುವಿಕೆ", "ಯುದ್ಧ ಸಂಕೇತ ಮಾತ್ರ", "ಶವಸಂಸ್ಕಾರ ಮಾತ್ರ"],
+    answer: 1,
+    explanation: "ಮುದ್ರೆಗಳನ್ನು ವ್ಯಾಪಾರ, ಗುರುತಿಸುವಿಕೆ ಮತ್ತು ಸಂಕೇತ ಬಳಕೆಗೆ ಬಳಸಲಾಗಿತ್ತು."
+  },
+  {
+    question: "ಸಿಂಧೂ ನಾಗರಿಕತೆಯ ಜನರು ಬಳಸುತ್ತಿದ್ದ ಪ್ರಮುಖ ನೀರಾವರಿ/ಜಲ ನಿರ್ವಹಣಾ ವ್ಯವಸ್ಥೆಯ ಲಕ್ಷಣವೇನು?",
+    options: ["ಕೇವಲ ಮಳೆನೀರಿನ ಸಂಗ್ರಹ", "ಚಕ್ಕಾಶ/ಒಳಚರಂಡಿ ವ್ಯವಸ್ಥೆ", "ಕೇವಲ ನದಿ ನೀರಿನ ಬಳಕೆ", "ಕೇವಲ ಮಣ್ಣಿನ ಕೊಳಗಳು"],
+    answer: 1,
+    explanation: "ಹರಪ್ಪನ್ ನಗರಗಳಲ್ಲಿ ಚಕ್ಕಾಶ/ಒಳಚರಂಡಿ ವ್ಯವಸ್ಥೆ ಅಭಿವೃದ್ಧಿಗೊಂಡಿತ್ತು."
+  }
+]
+
+const TIME_PER_QUESTION = 30;
+
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = TIME_PER_QUESTION;
+let timer = null;
+let userAnswers = [];
+
+const coverScreen = document.getElementById("coverScreen");
+const quizScreen = document.getElementById("quizScreen");
+const resultScreen = document.getElementById("resultScreen");
+
+const questionText = document.getElementById("questionText");
+const optionsBox = document.getElementById("optionsBox");
+const feedback = document.getElementById("feedback");
+const nextButton = document.getElementById("nextButton");
+const progressFill = document.getElementById("progressFill");
+const timerBox = document.getElementById("timer");
+const reviewList = document.getElementById("reviewList");
+
+function startQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  userAnswers = [];
+
+  coverScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
+
+  showQuestion();
+}
+
+function showQuestion() {
+  const question = questions[currentQuestion];
+
+  questionText.textContent =
+    "ಪ್ರಶ್ನೆ " + (currentQuestion + 1) + ": " + question.question;
+
+  optionsBox.innerHTML = "";
+  feedback.textContent = "";
+  feedback.className = "feedback";
+  nextButton.classList.add("hidden");
+
+  updateProgress();
+  startTimer();
+
+  question.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = option;
+
+    button.onclick = function () {
+      selectAnswer(index, button);
+    };
+
+    optionsBox.appendChild(button);
+  });
+}
+
+function selectAnswer(selectedIndex, selectedButton) {
+  stopTimer();
+
+  const question = questions[currentQuestion];
+  const allButtons = optionsBox.querySelectorAll(".option");
+
+  allButtons.forEach(button => {
+    button.disabled = true;
+  });
+
+  const isCorrect = selectedIndex === question.answer;
+
+  if (isCorrect) {
+    score++;
+    selectedButton.classList.add("correct");
+    feedback.textContent = "ಸರಿಯಾಗಿದೆ! 🎉";
+    feedback.className = "feedback correct";
+  } else {
+    selectedButton.classList.add("wrong");
+    allButtons[question.answer].classList.add("correct");
+    feedback.textContent = "ತಪ್ಪಾಗಿದೆ. " + question.explanation;
+    feedback.className = "feedback wrong";
+  }
+
+  userAnswers.push({
+    question: question.question,
+    selected: question.options[selectedIndex],
+    correctAnswer: question.options[question.answer],
+    isCorrect: isCorrect,
+    explanation: question.explanation
+  });
+
+  nextButton.classList.remove("hidden");
+}
+
+function updateProgress() {
+  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  progressFill.style.width = progress + "%";
+}
+
+function startTimer() {
+  stopTimer();
+
+  timeLeft = TIME_PER_QUESTION;
+  timerBox.textContent = timeLeft;
+
+  timer = setInterval(function () {
+    timeLeft--;
+    timerBox.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      stopTimer();
+      selectAnswer(-1, optionsBox.querySelector(".option"));
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timer);
+}
+
+function nextQuestion() {
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  stopTimer();
+
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.remove("hidden");
+
+  document.getElementById("finalScore").textContent =
+    "ನಿಮ್ಮ ಅಂಕ: " + score + " / " + questions.length;
+
+  let message = "";
+
+  if (score === questions.length) {
+    message = "ಅದ್ಭುತ! ನೀವು ಎಲ್ಲವನ್ನೂ ಸರಿಯಾಗಿ ಉತ್ತರಿಸಿದ್ದೀರಿ! 🎉";
+  } else if (score >= 15) {
+    message = "ಚೆನ್ನಾಗಿದೆ! ಇನ್ನಷ್ಟು ಅಭ್ಯಾಸ ಮಾಡಿ.";
+  } else {
+    message = "ಚಿಂತೆ ಬೇಡ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ!";
+  }
+
+  document.getElementById("resultMessage").textContent = message;
+
+  reviewList.innerHTML = "";
+
+  userAnswers.forEach(function (item) {
+    const listItem = document.createElement("li");
+    listItem.className = item.isCorrect ? "review-correct" : "review-wrong";
+
+    listItem.innerHTML =
+      "<strong>" + item.question + "</strong><br>" +
+      "ನಿಮ್ಮ ಉತ್ತರ: " + item.selected + "<br>" +
+      "ಸರಿಯಾದ ಉತ್ತರ: " + item.correctAnswer + "<br>" +
+      "<em>" + item.explanation + "</em>";
+
+    reviewList.appendChild(listItem);
+  });
+}
+
+function goHome() {
+  stopTimer();
+
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  coverScreen.classList.remove("hidden");
+}
+
+nextButton.onclick = nextQuestion;
+</script>
+
+</body>
+</html>
